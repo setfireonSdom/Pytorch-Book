@@ -14,7 +14,7 @@
     "href": "intro.html",
     "title": "1  How to Use This Book",
     "section": "",
-    "text": "This is not a dictionary-style PyTorch reference. It is a learning path that starts with core code patterns and ends with applying them to your own tasks.\nI strongly recommend reading the first six chapters in order, because they build the foundation for everything that follows:\n\nChapter 1: build a mental map of the codebase and the core pieces of PyTorch.\nChapter 2: learn tensors, shapes, and autograd.\nChapter 3: understand the standard training loop, the most important template in deep learning code.\nChapter 4: understand Dataset and DataLoader, which answer the question “how does data actually get into the model?”\nChapter 5: complete a full classification task with a multilayer perceptron.\nChapter 6: move into convolutional networks and image classification.\n\nThe later chapters are more practical:\n\nTransfer learning: how to use pretrained models when you do not have much data.\nDebugging and acceleration: what to do when training is slow, loss does not fall, or memory runs out.\nSmall projects: combine earlier pieces into tasks of your own.\n\nAs you study, keep coming back to these four questions:\n\nWhat is the shape of the input tensor?\nWhat is the shape of the model output?\nWhat exactly is the loss function comparing?\nAt what point do backpropagation and parameter updates happen?\n\nAs those four questions become clearer, you stop memorizing code and start understanding what training is actually doing.\nThe final skill this book is trying to give you is very specific:\nnot just the ability to copy a tutorial, but the ability to decide for yourself:\n\nIs this a classification task, a regression task, or something else?\nHow should I organize the data?\nWhat should the first version of the model be?\nWhich loss function and training loop fit this problem?\n\nIn other words, the goal is not to “remember PyTorch.” The goal is to translate your own problems into PyTorch.",
+    "text": "This is not a dictionary-style PyTorch reference. It is a learning path that starts with core code patterns and ends with building complete projects of your own.\nI strongly recommend reading the early chapters in order, because they build the foundation for everything that follows:\n\nstart with a mental map of the codebase and the core pieces of PyTorch\nlearn tensors, shapes, and autograd\nunderstand the standard training loop, the most important template in deep learning code\nunderstand Dataset and DataLoader, which answer the question “how does data actually get into the model?”\ncomplete a full classification task with a multilayer perceptron\nmove into convolutional networks and image classification\n\nThe middle part of the book becomes more practical:\n\nTransfer learning: how to use pretrained models when you do not have much data.\nDebugging and acceleration: what to do when training is slow, loss does not fall, or memory runs out.\nSmall projects: combine earlier pieces into tasks of your own.\n\nThe later project chapters are where the workflow becomes more complete:\n\na full tabular binary classification project\na fuller image classification workflow with validation, checkpointing, and inference\ntraining engineering habits that make your work repeatable\ncommon failure modes and how to recover from them\n\nOne deliberate choice in this book is that the stronger project chapters use datasets you can access immediately.\nThat means you do not need to collect your own data just to learn the workflow. The point is to practice the pipeline first, then adapt it later.\nAs you study, keep coming back to these four questions:\n\nWhat is the shape of the input tensor?\nWhat is the shape of the model output?\nWhat exactly is the loss function comparing?\nAt what point do backpropagation and parameter updates happen?\n\nAs those four questions become clearer, you stop memorizing code and start understanding what training is actually doing.\nThe final skill this book is trying to give you is very specific:\nnot just the ability to copy a tutorial, but the ability to decide for yourself:\n\nIs this a classification task, a regression task, or something else?\nHow should I organize the data?\nWhat should the first version of the model be?\nWhich loss function and training loop fit this problem?\n\nIn other words, the goal is not to “remember PyTorch.” The goal is to learn how to translate your own problems into PyTorch projects that you can actually run, debug, and improve.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>How to Use This Book</span>"
     ]
@@ -22,861 +22,1191 @@
   {
     "objectID": "01-roadmap.html",
     "href": "01-roadmap.html",
-    "title": "2  Chapter 1 A Map of the Code",
+    "title": "2  A Map of the Code",
     "section": "",
     "text": "2.1 The Study Order\nIn this book, we do not begin with abstract concepts. We begin with code.\nWhat you really need is not a list of PyTorch terms. You need to be able to open a training script and understand what each part is doing.\nThe book is built around the code/ directory. I recommend reading and running the files in this order:\nThat order is intentional.\nIt is not organized like a glossary. It follows the order in which these ideas actually appear when you build a project from the ground up.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Chapter 1 A Map of the Code</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>A Map of the Code</span>"
     ]
   },
   {
     "objectID": "01-roadmap.html#the-study-order",
     "href": "01-roadmap.html#the-study-order",
-    "title": "2  Chapter 1 A Map of the Code",
+    "title": "2  A Map of the Code",
     "section": "",
-    "text": "code/01_tensor_basics.py\ncode/02_autograd_basics.py\ncode/03_linear_regression.py\ncode/04_custom_dataset.py\ncode/05_mlp_classifier.py\ncode/06_cnn_classifier.py\ncode/07_transfer_learning.py",
+    "text": "code/01_tensor_basics.py\ncode/02_autograd_basics.py\ncode/03_linear_regression.py\ncode/04_custom_dataset.py\ncode/05_mlp_classifier.py\ncode/06_cnn_classifier.py\ncode/07_transfer_learning.py\ncode/08_project_template.py\ncode/09_tabular_binary_classification.py\ncode/10_image_classification_project.py\ncode/11_checkpoint_inference.py",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Chapter 1 A Map of the Code</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>A Map of the Code</span>"
     ]
   },
   {
     "objectID": "01-roadmap.html#what-each-file-teaches",
     "href": "01-roadmap.html#what-each-file-teaches",
-    "title": "2  Chapter 1 A Map of the Code",
+    "title": "2  A Map of the Code",
     "section": "2.2 What Each File Teaches",
-    "text": "2.2 What Each File Teaches\n\n2.2.1 01_tensor_basics.py\nThis file answers the most basic question: what does data look like inside PyTorch?\nHere you should understand:\n\nwhat a tensor is\nwhat shape means\nwhat reshape, unsqueeze, and flatten do\n\n\n\n2.2.2 02_autograd_basics.py\nThen we move into gradients.\nHere you should understand:\n\nwhich tensors need gradients\nwhat loss.backward() actually does\nwhy parameters have a .grad\n\n\n\n2.2.3 03_linear_regression.py\nThis is the first full training loop.\nIt matters because the later classification, CNN, and transfer learning examples all reuse the same basic structure. The models and data get more complex, but the training template stays recognizable.\n\n\n2.2.4 04_custom_dataset.py\nThis is where we start dealing with a real practical question: how does data get batched and fed into the model?\n\n\n2.2.5 05_mlp_classifier.py\nThis is the first real end-to-end task, where earlier pieces come together in a complete classification project.\n\n\n2.2.6 06_cnn_classifier.py\nThis upgrades the model from a fully connected network to a convolutional one, so we can work with image structure more naturally.\n\n\n2.2.7 07_transfer_learning.py\nThis moves the book from teaching examples toward techniques that are common in real projects.",
+    "text": "2.2 What Each File Teaches\n\n2.2.1 01_tensor_basics.py\nThis file answers the most basic question: what does data look like inside PyTorch?\nHere you should understand:\n\nwhat a tensor is\nwhat shape means\nwhat reshape, unsqueeze, and flatten do\n\n\n\n2.2.2 02_autograd_basics.py\nThen we move into gradients.\nHere you should understand:\n\nwhich tensors need gradients\nwhat loss.backward() actually does\nwhy parameters have a .grad\n\n\n\n2.2.3 03_linear_regression.py\nThis is the first full training loop.\nIt matters because the later classification, CNN, and transfer learning examples all reuse the same basic structure. The models and data get more complex, but the training template stays recognizable.\n\n\n2.2.4 04_custom_dataset.py\nThis is where we start dealing with a real practical question: how does data get batched and fed into the model?\n\n\n2.2.5 05_mlp_classifier.py\nThis is the first real end-to-end task, where earlier pieces come together in a complete classification project.\n\n\n2.2.6 06_cnn_classifier.py\nThis upgrades the model from a fully connected network to a convolutional one, so we can work with image structure more naturally.\n\n\n2.2.7 07_transfer_learning.py\nThis moves the book from teaching examples toward techniques that are common in real projects.\n\n\n2.2.8 08_project_template.py\nThis is the bridge between studying examples and shaping your own task into a project skeleton.\n\n\n2.2.9 09_tabular_binary_classification.py\nThis is the first fuller tabular project in the book. It introduces a workflow with train/validation splitting, feature scaling, binary classification, and checkpoint saving.\n\n\n2.2.10 10_image_classification_project.py\nThis is a more complete image project, with validation, scheduler use, best-checkpoint tracking, and test evaluation.\n\n\n2.2.11 11_checkpoint_inference.py\nThis completes the loop by showing how a trained model becomes something you can actually load and use for prediction.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Chapter 1 A Map of the Code</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>A Map of the Code</span>"
     ]
   },
   {
     "objectID": "01-roadmap.html#the-main-goal-of-this-chapter",
     "href": "01-roadmap.html#the-main-goal-of-this-chapter",
-    "title": "2  Chapter 1 A Map of the Code",
+    "title": "2  A Map of the Code",
     "section": "2.3 The Main Goal of This Chapter",
-    "text": "2.3 The Main Goal of This Chapter\nThe point is not to memorize file names. The point is to develop a reliable way to read code:\n\nFirst look at the inputs and outputs.\nThen look at how the model is defined.\nThen look at how the loss is computed.\nThen look at how parameters are updated.\nFinally, look at validation and debugging.\n\nThat reading order will keep helping you long after this book.",
+    "text": "2.3 The Main Goal of This Chapter\nThe point is not to memorize file names. The point is to develop a reliable way to read code and a reliable way to grow a project:\n\nFirst look at the inputs and outputs.\nThen look at how the model is defined.\nThen look at how the loss is computed.\nThen look at how parameters are updated.\nFinally, look at validation and debugging.\n\nThat reading order will keep helping you long after this book.\nAs the book goes on, you should add a second checklist:\n\nHow is the data split?\nWhat metric decides whether the run improved?\nWhere is the best checkpoint saved?\nHow will this model be used after training?\n\nThose questions are what turn code examples into project workflows.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Chapter 1 A Map of the Code</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>A Map of the Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html",
     "href": "02-tensors-and-autograd.html",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "",
     "text": "3.1 Read code/01_tensor_basics.py Line by Line\nThis chapter revolves around just two files:\nRun both of them before reading too deeply. The ideas are much easier to understand once you have seen the code in action.\nThis file is short, which makes it a good place to practice reading PyTorch carefully.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#read-code01_tensor_basics.py-line-by-line",
     "href": "02-tensors-and-autograd.html#read-code01_tensor_basics.py-line-by-line",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "",
     "text": "3.1.1 Step 1: Create a 1D tensor\nx = torch.arange(12, dtype=torch.float32)\ninspect_tensor(\"x\", x)\nThere are two things to notice here:\n\ntorch.arange(12) creates 12 numbers, from 0 through 11.\ndtype=torch.float32 stores them as floating-point values.\n\nAt this point, the shape of x is [12].\nDo not rush past that. Start building the habit of asking:\nwhat is the dimensionality of this tensor, and what is its shape right now?\n\n\n3.1.2 Step 2: Turn a 1D tensor into a matrix\nmatrix = x.reshape(3, 4)\ninspect_tensor(\"matrix\", matrix)\nThis step does not change the data values. It changes how the data is organized.\nIn other words:\n\nthe values are still the same 12 values\nbut the view changes from one long vector into a 3 x 4 matrix\n\nThat is one of the most important ideas in early PyTorch learning:\nmany operations change shape rather than changing the values themselves.\n\n\n3.1.3 Step 3: Add a batch dimension by hand\nbatch = matrix.unsqueeze(0)\ninspect_tensor(\"batch\", batch)\nunsqueeze(0) inserts a new dimension of length 1 at dimension 0.\nSo the shape changes from:\n\n[3, 4]\n\nto:\n\n[1, 3, 4]\n\nWhy does this matter?\nBecause real models usually process batches of samples, not just one sample at a time.\nThat extra first dimension is often the batch dimension.\n\n\n3.1.4 Step 4: Flatten each sample again\nflattened = batch.flatten(start_dim=1)\ninspect_tensor(\"flattened\", flattened)\nHere start_dim=1 means:\n\nkeep dimension 0 unchanged\nflatten everything from dimension 1 onward\n\nSo the shape changes from [1, 3, 4] to [1, 12].\nThis is the same basic idea you will later see in Flatten() layers inside MLP models.\nEven though this example is tiny, you are already looking at one of the most common shape transformations in neural network code.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#what-should-you-watch-for-in-tensor-code",
     "href": "02-tensors-and-autograd.html#what-should-you-watch-for-in-tensor-code",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.2 What Should You Watch for in Tensor Code?",
     "text": "3.2 What Should You Watch for in Tensor Code?\nWhenever you read tensor code, focus on these three things first:\n\nWhat is the current shape?\nWhat will the next shape be?\nWhy is the shape changing?\n\nIf you always focus on individual values, model code will feel much harder than it needs to.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#why-shape-usually-matters-more-than-values",
     "href": "02-tensors-and-autograd.html#why-shape-usually-matters-more-than-values",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.3 Why Shape Usually Matters More Than Values",
     "text": "3.3 Why Shape Usually Matters More Than Values\nAt the beginning it is easy to stare at values like 1.0, 2.0, and 3.0.\nBut in deep learning code, shapes are usually more important:\n\n[12]\n[3, 4]\n[1, 3, 4]\n[1, 12]\n\nMany bugs are not numerical mistakes. They are shape mistakes.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#now-read-code02_autograd_basics.py-line-by-line",
     "href": "02-tensors-and-autograd.html#now-read-code02_autograd_basics.py-line-by-line",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.4 Now Read code/02_autograd_basics.py Line by Line",
     "text": "3.4 Now Read code/02_autograd_basics.py Line by Line\nThis file introduces trainable parameters for the first time:\nweight = torch.tensor(2.0, requires_grad=True)\nbias = torch.tensor(1.0, requires_grad=True)\nThe key point here is not the syntax. It is the role of each tensor:\n\nthe input x does not need to be learned\nthe parameters weight and bias do need to be learned\n\nThat is why only the parameters use requires_grad=True.\n\n3.4.1 Step 1: Compute the prediction\ny_pred = weight * x + bias\nThis is the simplest possible linear model.\nIt says:\n\ntake each input x\nmultiply by the weight weight\nadd the bias bias\nget the prediction y_pred\n\n\n\n3.4.2 Step 2: Compute the loss\nloss = ((y_pred - y_true) ** 2).mean()\nThis answers a very practical question:\nhow far are the model’s predictions from the true answers right now?\nHere we use mean squared error.\n\n\n3.4.3 Step 3: Run backpropagation\nIn this code:\nloss.backward()\nyou can think of the process like this:\n\nuse the current parameters to compute predictions\ncompare those predictions with the true targets\nask PyTorch to compute how the parameters should move\n\nThat third step is backpropagation.\nAfterward, weight.grad and bias.grad contain values.\nThose gradients are not the new parameters. They are signals that tell us how the parameters should be updated.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#put-the-two-files-together",
     "href": "02-tensors-and-autograd.html#put-the-two-files-together",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.5 Put the Two Files Together",
     "text": "3.5 Put the Two Files Together\n01_tensor_basics.py teaches you how data is shaped.\n02_autograd_basics.py teaches you how parameters receive gradients through the loss.\nTogether they form the foundation of later training code:\n\ndata must be organized in the right shapes\nparameters must be part of the computation so gradients can flow to them",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#the-big-ideas-behind-the-code",
     "href": "02-tensors-and-autograd.html#the-big-ideas-behind-the-code",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.6 The Big Ideas Behind the Code",
     "text": "3.6 The Big Ideas Behind the Code\nAfter these two files, you should be able to summarize the core ideas:\n\nTensors are PyTorch’s basic data structure.\nIn deep learning code, shape is often the first thing to check.\nParameters differ from normal inputs because parameters need to be learned.\nbackward() computes gradients. It does not update parameters.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "02-tensors-and-autograd.html#what-you-should-change-yourself",
     "href": "02-tensors-and-autograd.html#what-you-should-change-yourself",
-    "title": "3  Chapter 2 From Tensor Code to Gradient Code",
+    "title": "3  From Tensor Code to Gradient Code",
     "section": "3.7 What You Should Change Yourself",
     "text": "3.7 What You Should Change Yourself\nTry editing a few things and rerun the code:\n\nIn 01_tensor_basics.py, change reshape(3, 4) to another valid shape.\nIn 02_autograd_basics.py, change the initial values of weight and bias.\nObserve how loss and .grad change.\n\nThat is how PyTorch starts to feel natural: not by memorizing APIs, but by watching shapes and gradients behave.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Chapter 2 From Tensor Code to Gradient Code</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>From Tensor Code to Gradient Code</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html",
     "href": "03-training-loop.html",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "",
     "text": "4.1 First, Look at the Structure of the Code\nThis chapter focuses on a single file: code/03_linear_regression.py.\nIt may look simple, but it is one of the most important files in the book.\nWhy? Because almost every more advanced task later on still relies on the same training structure.\nThis file has three main parts:\nThat is the basic shape of a minimal but usable training project.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#first-look-at-the-structure-of-the-code",
     "href": "03-training-loop.html#first-look-at-the-structure-of-the-code",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "",
     "text": "make_dataset(): creates training data\ntrain_one_epoch(): wraps one epoch of training\nmain(): builds the model, loss, and optimizer, then runs training",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#start-with-make_dataset",
     "href": "03-training-loop.html#start-with-make_dataset",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.2 Start with make_dataset()",
     "text": "4.2 Start with make_dataset()\nfeatures = torch.randn(num_samples, 1)\nnoise = 0.2 * torch.randn(num_samples, 1)\ntargets = 3.5 * features + 1.2 + noise\nreturn TensorDataset(features, targets)\nThis code creates a dataset where there really is a pattern between input and target.\nYou can read it like this:\n\nfeatures are the inputs\ntargets are the true answers\nthe underlying rule is roughly y = 3.5x + 1.2\nsome noise is added to make it more realistic\n\nThe point of this setup is that we do not have to think about messy real-world data yet. We can focus on the training process itself.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#then-look-at-the-setup-in-main",
     "href": "03-training-loop.html#then-look-at-the-setup-in-main",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.3 Then Look at the Setup in main()",
     "text": "4.3 Then Look at the Setup in main()\ndataset = make_dataset()\nloader = DataLoader(dataset, batch_size=32, shuffle=True)\n\nmodel = nn.Linear(1, 1)\ncriterion = nn.MSELoss()\noptimizer = torch.optim.SGD(model.parameters(), lr=0.1)\nThese lines assemble the four essential pieces of a training task:\n\ndata\nmodel\nloss function\noptimizer\n\nYou will do this again and again in your own projects.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#why-linear-regression-is-the-right-starting-point",
     "href": "03-training-loop.html#why-linear-regression-is-the-right-starting-point",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.4 Why Linear Regression Is the Right Starting Point",
     "text": "4.4 Why Linear Regression Is the Right Starting Point\nIt works so well for learning because:\n\nthe data is simple\nthe model is simple\nthe loss is simple\nthe training behavior is easy to interpret\n\nThat lets you focus on the loop itself instead of being distracted by model complexity.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#now-read-train_one_epoch-line-by-line",
     "href": "03-training-loop.html#now-read-train_one_epoch-line-by-line",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.5 Now Read train_one_epoch() Line by Line",
     "text": "4.5 Now Read train_one_epoch() Line by Line\nThis is the part you should keep coming back to:\nfor inputs, targets in loader:\n    optimizer.zero_grad()\n    predictions = model(inputs)\n    loss = criterion(predictions, targets)\n    loss.backward()\n    optimizer.step()\nWhenever you read a PyTorch training script, your eyes should learn to find these steps almost immediately.\n\n4.5.1 for inputs, targets in loader:\nTraining does not happen on the whole dataset at once. It happens one batch at a time.\nWhy?\n\nit uses memory more efficiently\nit trains faster\nit works better with GPUs\n\n\n\n4.5.2 optimizer.zero_grad()\nThis clears the old gradients.\nIf you forget this step, gradients accumulate, and training usually behaves incorrectly.\n\n\n4.5.3 predictions = model(inputs)\nThis is the forward pass.\nThe model uses its current parameters to make predictions for this batch.\n\n\n4.5.4 loss = criterion(predictions, targets)\nThis compares predictions to targets and produces a scalar loss.\nYou can think of it as “how wrong is the model on this batch right now?”\n\n\n4.5.5 loss.backward()\nThis computes gradients for the model parameters.\n\n\n4.5.6 optimizer.step()\nThis is the step that actually updates the parameters.\nBeginners often blur backward() and step() together. Keep the distinction clear:\n\nbackward() computes gradients\nstep() uses those gradients to change parameters",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#the-training-template-hidden-in-the-code",
     "href": "03-training-loop.html#the-training-template-hidden-in-the-code",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.6 The Training Template Hidden in the Code",
     "text": "4.6 The Training Template Hidden in the Code\nThis loop is really just six actions:\n\nget a batch\nclear old gradients\nrun the forward pass\ncompute the loss\nrun backpropagation\nupdate the parameters\n\nIf you can see those six actions clearly, more advanced code becomes much easier to read.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#finally-look-at-the-epoch-loop",
     "href": "03-training-loop.html#finally-look-at-the-epoch-loop",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.7 Finally, Look at the Epoch Loop",
     "text": "4.7 Finally, Look at the Epoch Loop\nfor epoch in range(1, 21):\n    avg_loss = train_one_epoch(model, loader, criterion, optimizer)\n    print(f\"epoch={epoch:02d} loss={avg_loss:.4f}\")\nAn epoch means one full pass through the training set.\nAt this point, two ideas should become clear:\n\na batch is the basic unit of training work\nmultiple epochs are needed for the model to improve gradually",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#what-you-are-really-learning-here",
     "href": "03-training-loop.html#what-you-are-really-learning-here",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.8 What You Are Really Learning Here",
     "text": "4.8 What You Are Really Learning Here\nThis chapter is not really about linear regression.\nIt is about learning to see almost any training script as a variation on the same core pattern.\nOnce that pattern becomes familiar, CNNs, transfer learning, and even much larger models start to feel less mysterious.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "03-training-loop.html#three-experiments-to-try-right-away",
     "href": "03-training-loop.html#three-experiments-to-try-right-away",
-    "title": "4  Chapter 3 Learning the Training Loop Through Linear Regression",
+    "title": "4  Learning the Training Loop Through Linear Regression",
     "section": "4.9 Three Experiments to Try Right Away",
     "text": "4.9 Three Experiments to Try Right Away\n\nChange the learning rate from 0.1 to 1.0 and see whether training becomes unstable.\nChange the learning rate to 0.001 and see whether convergence becomes much slower.\nChange the batch size and watch whether the loss becomes smoother or noisier.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 3 Learning the Training Loop Through Linear Regression</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Learning the Training Loop Through Linear Regression</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html",
     "href": "04-dataset-and-dataloader.html",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "",
     "text": "5.1 First, Look at the Structure\nThis chapter is built around code/04_custom_dataset.py.\nIn the previous chapter, we learned what the training loop looks like. Now we need to answer a key question:\nwhere does the loader in that training loop actually come from?\nThis file does two things:\nThe example is tiny, but it captures the core logic of how data enters a real PyTorch project.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#first-look-at-the-structure",
     "href": "04-dataset-and-dataloader.html#first-look-at-the-structure",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "",
     "text": "defines StudentScoreDataset\nwraps it in a DataLoader",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#start-with-studentscoredataset",
     "href": "04-dataset-and-dataloader.html#start-with-studentscoredataset",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.2 Start with StudentScoreDataset",
     "text": "5.2 Start with StudentScoreDataset\nclass StudentScoreDataset(Dataset):\n    def __init__(self) -&gt; None:\n        self.features = ...\n        self.labels = ...\nThe basic idea is very simple:\n\nfeatures store the inputs\nlabels store the targets\n\nThis time we do not use a built-in dataset. We create a tiny tabular dataset ourselves.\nThat makes it easier to focus on how Dataset works.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#what-is-a-dataset-really",
     "href": "04-dataset-and-dataloader.html#what-is-a-dataset-really",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.3 What Is a Dataset, Really?",
     "text": "5.3 What Is a Dataset, Really?\nFrom the code’s point of view, a dataset only needs to answer two questions:\n\nHow many samples are there?\nIf I give you an index, what sample do you return?\n\nThat is why a custom dataset implements:\n\n__len__\n__getitem__\n\nThis is not just syntax. It is the core design.\nPyTorch does not care whether your data comes from a spreadsheet, an image folder, or a database. It only needs a consistent way to request one sample at a time.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#understand-__len__-and-__getitem__",
     "href": "04-dataset-and-dataloader.html#understand-__len__-and-__getitem__",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.4 Understand __len__ and __getitem__",
     "text": "5.4 Understand __len__ and __getitem__\ndef __len__(self) -&gt; int:\n    return len(self.features)\nThis tells PyTorch how many samples exist.\ndef __getitem__(self, index: int) -&gt; tuple[torch.Tensor, torch.Tensor]:\n    return self.features[index], self.labels[index]\nThis tells PyTorch how to fetch one sample and its label.\nThe key idea is:\na dataset is not responsible for training. Its job is to deliver samples on demand.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#then-what-does-dataloader-do",
     "href": "04-dataset-and-dataloader.html#then-what-does-dataloader-do",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.5 Then What Does DataLoader Do?",
     "text": "5.5 Then What Does DataLoader Do?\nDataLoader(dataset, batch_size=2, shuffle=True) says:\n\ndo not feed one sample at a time\ngroup samples into batches\nshuffle them during training\n\nThat is why the later training loop can be written naturally as:\nfor inputs, labels in loader:\n    ...",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#finally-look-at-what-the-main-program-prints",
     "href": "04-dataset-and-dataloader.html#finally-look-at-what-the-main-program-prints",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.6 Finally, Look at What the Main Program Prints",
     "text": "5.6 Finally, Look at What the Main Program Prints\nfor batch_idx, (inputs, labels) in enumerate(loader, start=1):\n    print(f\"batch {batch_idx}\")\n    print(\"inputs shape:\", tuple(inputs.shape))\n    print(\"labels shape:\", tuple(labels.shape))\nThis is a habit worth keeping.\nDo not guess what a batch looks like. Print it and inspect it.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#the-most-important-habit-from-this-chapter",
     "href": "04-dataset-and-dataloader.html#the-most-important-habit-from-this-chapter",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.7 The Most Important Habit from This Chapter",
     "text": "5.7 The Most Important Habit from This Chapter\nWhen you start building your own project, do not begin with the model.\nAsk yourself first:\n\nWhat does one sample look like?\nWhat does one label look like?\nWhat shape will they have after batching?\n\nIf those three things are unclear, model training usually breaks very quickly.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#the-main-ideas-behind-the-file",
     "href": "04-dataset-and-dataloader.html#the-main-ideas-behind-the-file",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.8 The Main Ideas Behind the File",
     "text": "5.8 The Main Ideas Behind the File\nAfter reading this chapter, you should understand:\n\nDataset defines individual samples.\nDataLoader organizes batched iteration.\nshuffle=True is usually used for training data, not validation data.\nLabel shape and dtype must match the loss function you plan to use.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "04-dataset-and-dataloader.html#exercises-to-try-immediately",
     "href": "04-dataset-and-dataloader.html#exercises-to-try-immediately",
-    "title": "5  Chapter 4 Understanding Data Flow Through a Custom Dataset",
+    "title": "5  Understanding Data Flow Through a Custom Dataset",
     "section": "5.9 Exercises to Try Immediately",
     "text": "5.9 Exercises to Try Immediately\n\nAdd more samples to StudentScoreDataset.\nChange batch_size=2 to 3 or 4.\nObserve how the batch shapes change.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Chapter 4 Understanding Data Flow Through a Custom Dataset</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Understanding Data Flow Through a Custom Dataset</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html",
     "href": "05-mlp-classification.html",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "",
     "text": "6.1 Break the Code into Modules First\nThis chapter introduces the first file that really feels like a complete project: code/05_mlp_classifier.py.\nIf the earlier chapters were about gathering building blocks, this chapter is where those blocks begin to feel like a working system.\nThis file has four main parts:\nThat is already very close to the structure of a real training script.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#break-the-code-into-modules-first",
     "href": "05-mlp-classification.html#break-the-code-into-modules-first",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "",
     "text": "MLPClassifier: defines the model\nevaluate(): defines validation logic\nthe dataset and DataLoader\nthe training loop in main()",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#start-by-reading-the-model-class",
     "href": "05-mlp-classification.html#start-by-reading-the-model-class",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.2 Start by Reading the Model Class",
     "text": "6.2 Start by Reading the Model Class\nclass MLPClassifier(nn.Module):\n    def __init__(self) -&gt; None:\n        super().__init__()\n        self.network = nn.Sequential(\n            nn.Flatten(),\n            nn.Linear(28 * 28, 128),\n            nn.ReLU(),\n            nn.Linear(128, 10),\n        )\nThe main idea to build here is simple:\ndefining a model means defining how the input data moves through layers and what kind of output comes out at the end.\n\n6.2.1 nn.Flatten()\nMNIST images are 2D images, but a Linear layer expects a 1D vector for each sample.\nSo the first step is to flatten the image.\n\n\n6.2.2 nn.Linear(28 * 28, 128)\nThis says:\n\neach image starts as 784 numbers\nthe hidden representation will have 128 features\n\n\n\n6.2.3 nn.ReLU()\nThis adds nonlinearity, so the model is not just stacking linear operations.\n\n\n6.2.4 nn.Linear(128, 10)\nThis produces 10 class scores, one for each digit from 0 to 9.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#why-this-file-is-worth-revisiting",
     "href": "05-mlp-classification.html#why-this-file-is-worth-revisiting",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.3 Why This File Is Worth Revisiting",
     "text": "6.3 Why This File Is Worth Revisiting\nThis is the first example that pulls everything together:\n\ntensors\nbatching\na model\na loss function\nan optimizer\nvalidation accuracy\n\nWhen you can read this file comfortably, you have started moving from “learning parts” to “understanding a full training script.”",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#why-is-forward-so-short",
     "href": "05-mlp-classification.html#why-is-forward-so-short",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.4 Why Is forward() So Short?",
     "text": "6.4 Why Is forward() So Short?\ndef forward(self, x: torch.Tensor) -&gt; torch.Tensor:\n    return self.network(x)\nIt is short because the structure has already been defined in nn.Sequential.\nIn more complex models, forward() gets longer, but the idea stays the same: it describes how data moves through the model.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#now-read-the-data-section",
     "href": "05-mlp-classification.html#now-read-the-data-section",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.5 Now Read the Data Section",
     "text": "6.5 Now Read the Data Section\ntrain_dataset = datasets.MNIST(...)\ntest_dataset = datasets.MNIST(...)\n\ntrain_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)\ntest_loader = DataLoader(test_dataset, batch_size=256, shuffle=False)\nTwo important things happen here:\n\nthe training and test sets are separated\neach gets its own DataLoader\n\nPay attention to a common pattern:\n\ntraining data usually uses shuffle=True\ntest or validation data usually uses shuffle=False",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#follow-the-shape-of-the-data-through-the-model",
     "href": "05-mlp-classification.html#follow-the-shape-of-the-data-through-the-model",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.6 Follow the Shape of the Data Through the Model",
     "text": "6.6 Follow the Shape of the Data Through the Model\n\nThe input image starts as [batch_size, 1, 28, 28]\nAfter Flatten(), it becomes [batch_size, 784]\nThe hidden layer maps it into a learned feature space\nThe final output becomes [batch_size, 10]\n\nThose 10 values are not probabilities yet. They are logits: raw class scores.\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(), lr=1e-3)\nThese two lines decide:\n\nhow the model is judged\nhow the parameters are updated",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#why-use-crossentropyloss",
     "href": "05-mlp-classification.html#why-use-crossentropyloss",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.7 Why Use CrossEntropyLoss?",
     "text": "6.7 Why Use CrossEntropyLoss?\nBecause this is a multiclass classification task.\nIt typically expects:\n\nmodel outputs of shape [batch_size, num_classes]\nlabels of shape [batch_size]\nlabels stored as class indices, not one-hot vectors\n\nThat is why reading classification code always means checking both output shape and label format.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#read-the-training-loop-carefully",
     "href": "05-mlp-classification.html#read-the-training-loop-carefully",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.8 Read the Training Loop Carefully",
-    "text": "6.8 Read the Training Loop Carefully\nfor images, labels in train_loader:\n    images = images.to(device)\n    labels = labels.to(device)\n\n    optimizer.zero_grad()\n    logits = model(images)\n    loss = criterion(logits, labels)\n    loss.backward()\n    optimizer.step()\nBy now, you should notice something important:\nthis has almost exactly the same structure as the training loop from Chapter 3.\nThe main things that changed are:\n\nthe data\nthe model\nthe loss function\n\nThat is one of the most important lessons in learning PyTorch for your own work.\nYou do not need to learn a brand-new system every time. You learn how to swap pieces into a familiar training skeleton.",
+    "text": "6.8 Read the Training Loop Carefully\nfor images, labels in train_loader:\n    images = images.to(device)\n    labels = labels.to(device)\n\n    optimizer.zero_grad()\n    logits = model(images)\n    loss = criterion(logits, labels)\n    loss.backward()\n    optimizer.step()\nBy now, you should notice something important:\nthis has almost exactly the same structure as the earlier training loop you saw with linear regression.\nThe main things that changed are:\n\nthe data\nthe model\nthe loss function\n\nThat is one of the most important lessons in learning PyTorch for your own work.\nYou do not need to learn a brand-new system every time. You learn how to swap pieces into a familiar training skeleton.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#evaluate-matters-too",
     "href": "05-mlp-classification.html#evaluate-matters-too",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.9 evaluate() Matters Too",
     "text": "6.9 evaluate() Matters Too\nA lot of beginners learn how to train, but not how to validate.\nIn real projects, validation matters just as much.\nThe key pieces here are:\n\nmodel.eval()\ntorch.no_grad()\nargmax(dim=1)\n\nThey solve three different problems:\n\nswitch the model into evaluation mode\nturn off gradient computation\nconvert class scores into predicted class labels",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#a-good-order-for-reading-this-kind-of-code",
     "href": "05-mlp-classification.html#a-good-order-for-reading-this-kind-of-code",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.10 A Good Order for Reading This Kind of Code",
     "text": "6.10 A Good Order for Reading This Kind of Code\nWhenever you read a classification script, try this order:\n\nWhat shape do the inputs have?\nHow many dimensions does the final output have?\nWhich loss function is used?\nWhat format are the labels in?\nHow is accuracy computed?",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "05-mlp-classification.html#good-changes-to-try-right-away",
     "href": "05-mlp-classification.html#good-changes-to-try-right-away",
-    "title": "6  Chapter 5 Learning a Full Project Through MLP Classification",
+    "title": "6  Learning a Full Project Through MLP Classification",
     "section": "6.11 Good Changes to Try Right Away",
     "text": "6.11 Good Changes to Try Right Away\n\nChange the hidden size from 128 to 256\nAdd another Linear + ReLU block\nChange the optimizer from Adam to SGD\n\nThat is when you start to feel how model design, optimization, and training results affect one another in practice.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Chapter 5 Learning a Full Project Through MLP Classification</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Learning a Full Project Through MLP Classification</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html",
     "href": "06-cnn-image-classification.html",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "",
     "text": "7.1 Start with the Overall Structure\nThis chapter centers on code/06_cnn_classifier.py.\nIf the previous chapter was your first complete classification project, this one is your first project that treats images like images.\nThe file still contains the same major pieces:\nThat is worth noticing.\nIt tells you something important:\nwhen the task type stays the same, the broad structure of a PyTorch project often stays stable. The biggest changes usually happen inside the model.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#start-with-the-overall-structure",
     "href": "06-cnn-image-classification.html#start-with-the-overall-structure",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "",
     "text": "the model class SimpleCNN\nthe validation function evaluate()\nthe dataset and DataLoader\nthe training loop in main()",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#read-simplecnn-in-parts",
     "href": "06-cnn-image-classification.html#read-simplecnn-in-parts",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.2 Read SimpleCNN in Parts",
     "text": "7.2 Read SimpleCNN in Parts\nself.features = nn.Sequential(\n    nn.Conv2d(1, 16, kernel_size=3, padding=1),\n    nn.ReLU(),\n    nn.MaxPool2d(2),\n    nn.Conv2d(16, 32, kernel_size=3, padding=1),\n    nn.ReLU(),\n    nn.MaxPool2d(2),\n)\nThis part is the feature extractor.\nTry not to memorize terminology yet. Read it as a sequence of shape changes.\n\n7.2.1 Layer 1: nn.Conv2d(1, 16, kernel_size=3, padding=1)\nThe most important parts here are:\n\nthe input channel count is 1\nthe output channel count is 16\n\nFor FashionMNIST, the input shape is usually [batch_size, 1, 28, 28].\nAfter this convolution, the shape becomes:\n\n[batch_size, 16, 28, 28]\n\nWhy do height and width stay 28 x 28?\nBecause padding=1 keeps the spatial size unchanged for this kernel size.\n\n\n7.2.2 Layer 2: nn.MaxPool2d(2)\nThis layer does not change the number of channels, but it cuts the spatial size in half.\nSo the shape becomes:\n\n[batch_size, 16, 14, 14]\n\n\n\n7.2.3 The Next Convolution and Pooling Layers\nAfter the second convolution and pooling steps, the shape becomes:\n\n[batch_size, 32, 14, 14]\n[batch_size, 32, 7, 7]\n\nThis is the habit worth building:\nafter every major layer, ask yourself what the shape is now.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#why-is-the-classifier-written-this-way",
     "href": "06-cnn-image-classification.html#why-is-the-classifier-written-this-way",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.3 Why Is the Classifier Written This Way?",
     "text": "7.3 Why Is the Classifier Written This Way?\nself.classifier = nn.Sequential(\n    nn.Flatten(),\n    nn.Linear(32 * 7 * 7, 10),\n)\nThis part turns extracted features into class scores.\n\n7.3.1 nn.Flatten()\nThe convolutional block outputs a 4D tensor.\nThe fully connected layer expects a 2D tensor, so we flatten first.\n\n\n7.3.2 nn.Linear(32 * 7 * 7, 10)\nThis is not an arbitrary number.\nIt comes directly from the shape calculation above:\n\nchannels: 32\nheight and width: 7 x 7\n\nSo each image becomes 32 * 7 * 7 features before classification.\nIf you get this number wrong, the model usually fails with a dimension mismatch.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#what-does-forward-show-you",
     "href": "06-cnn-image-classification.html#what-does-forward-show-you",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.4 What Does forward() Show You?",
     "text": "7.4 What Does forward() Show You?\ndef forward(self, x: torch.Tensor) -&gt; torch.Tensor:\n    x = self.features(x)\n    return self.classifier(x)\nThese two lines are a clear example of how CNN code is often organized:\n\nfirst extract features\nthen classify\n\nYou will see this pattern again in many more advanced vision models.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#notice-what-did-not-change",
     "href": "06-cnn-image-classification.html#notice-what-did-not-change",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.5 Notice What Did Not Change",
     "text": "7.5 Notice What Did Not Change\nfor images, labels in train_loader:\n    images = images.to(device)\n    labels = labels.to(device)\n\n    optimizer.zero_grad()\n    logits = model(images)\n    loss = criterion(logits, labels)\n    loss.backward()\n    optimizer.step()\nThis is almost the same training template as the previous chapter.\nThat is one of the most useful long-term lessons in PyTorch:\nwhat transfers best is not memorizing one specific model, but learning which parts are stable and which parts can be swapped out.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#the-main-ideas-to-take-away",
     "href": "06-cnn-image-classification.html#the-main-ideas-to-take-away",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.6 The Main Ideas to Take Away",
     "text": "7.6 The Main Ideas to Take Away\n\nCNNs suit image tasks because they preserve local spatial structure.\nConvolution layers often change the number of channels.\nPooling layers often reduce height and width.\nThe input size of a fully connected layer must come from shape reasoning, not guessing.\nThe model may change, but the training loop often stays largely the same.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "06-cnn-image-classification.html#useful-changes-to-try",
     "href": "06-cnn-image-classification.html#useful-changes-to-try",
-    "title": "7  Chapter 6 Understanding Image Models Through CNN Code",
+    "title": "7  Understanding Image Models Through CNN Code",
     "section": "7.7 Useful Changes to Try",
     "text": "7.7 Useful Changes to Try\n\nChange the first convolution from 16 output channels to 32\nAdd another convolution layer to features\nRecompute the input size of the final Linear layer yourself\nTemporarily print x.shape inside forward() and compare it with your manual reasoning",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Chapter 6 Understanding Image Models Through CNN Code</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Understanding Image Models Through CNN Code</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html",
     "href": "07-transfer-learning.html",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "",
     "text": "8.1 What Is Different from Earlier Chapters?\nThis chapter is built around code/07_transfer_learning.py.\nIts importance is simple: this is no longer just a teaching example. It is a starting point that many real projects would actually use.\nIn the earlier chapters, we built models from scratch.\nThis file starts with:\nThat means we are loading a model that has already learned from a large image dataset.\nSo the goal changes. We are no longer asking the model to learn everything from scratch. We are asking it to adapt existing visual knowledge to a new task.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#what-is-different-from-earlier-chapters",
     "href": "07-transfer-learning.html#what-is-different-from-earlier-chapters",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "",
     "text": "weights = models.ResNet18_Weights.DEFAULT\nmodel = models.resnet18(weights=weights)",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#read-build_model-step-by-step",
     "href": "07-transfer-learning.html#read-build_model-step-by-step",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.2 Read build_model() Step by Step",
     "text": "8.2 Read build_model() Step by Step\n\n8.2.1 Step 1: Load a pretrained model\nmodel = models.resnet18(weights=weights)\nYou can think of this model as no longer being a blank slate.\nIt has already learned many general visual features such as edges, textures, and local patterns.\nThat is what makes transfer learning useful.\n\n\n8.2.2 Step 2: Freeze the existing parameters\nfor parameter in model.parameters():\n    parameter.requires_grad = False\nThis means:\ndo not update the original feature extraction parameters yet.\nWhy do this?\nBecause if your dataset is small, training the whole large model immediately can be less stable and more data-hungry than you want.\n\n\n8.2.3 Step 3: Replace the final classification head\nmodel.fc = nn.Linear(model.fc.in_features, num_classes)\nThis is one of the most important lines in the whole file.\nIt says:\n\nkeep the earlier feature extractor\nreplace the final layer with a new one that matches your task\n\nIf your task has 3 classes, the output should have 3 dimensions. If it has 5 classes, the output should have 5.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#what-is-the-main-program-checking",
     "href": "07-transfer-learning.html#what-is-the-main-program-checking",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.3 What Is the Main Program Checking?",
     "text": "8.3 What Is the Main Program Checking?\ntotal_params = sum(p.numel() for p in model.parameters())\ntrainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)\nThese lines are not just decorative logging.\nThey verify something important:\nhow many parameters the model has in total, and how many are still trainable after freezing.\nThat is a very practical debugging check in transfer learning work.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#why-this-template-is-so-useful-for-your-own-work",
     "href": "07-transfer-learning.html#why-this-template-is-so-useful-for-your-own-work",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.4 Why This Template Is So Useful for Your Own Work",
     "text": "8.4 Why This Template Is So Useful for Your Own Work\nThis setup fits a very common real-world situation:\n\nyou have your own image classification task\nyour dataset is not huge\nyou want a strong first version quickly\n\nIn that case, transfer learning is often a better starting point than training a CNN from scratch.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#the-questions-this-chapter-teaches-you-to-ask",
     "href": "07-transfer-learning.html#the-questions-this-chapter-teaches-you-to-ask",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.5 The Questions This Chapter Teaches You to Ask",
     "text": "8.5 The Questions This Chapter Teaches You to Ask\nWhen you meet a new image task, start asking:\n\nDo I have enough data to justify training from scratch?\nIf not, should I start from a pretrained model?\nShould I train only the classification head first, or gradually unfreeze more layers later?\n\nOnce you start asking those questions, you are no longer just copying examples. You are making modeling decisions.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#how-you-could-extend-this-template",
     "href": "07-transfer-learning.html#how-you-could-extend-this-template",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.6 How You Could Extend This Template",
     "text": "8.6 How You Could Extend This Template\nTo turn it into your own project, you would usually add:\n\nyour own dataset and image preprocessing\na train/validation split\ntraining and validation loops\nmodel checkpoint saving\ngradual unfreezing if needed",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "07-transfer-learning.html#the-one-sentence-i-want-you-to-keep",
     "href": "07-transfer-learning.html#the-one-sentence-i-want-you-to-keep",
-    "title": "8  Chapter 7 From a Transfer Learning Template to a Real Project",
+    "title": "8  From a Transfer Learning Template to a Real Project",
     "section": "8.7 The One Sentence I Want You to Keep",
     "text": "8.7 The One Sentence I Want You to Keep\nTransfer learning is not an “advanced trick.” It is a practical project strategy.\nIf your goal is to use PyTorch for your own needs, that strategic thinking matters more than memorizing one more network architecture.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter 7 From a Transfer Learning Template to a Real Project</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>From a Transfer Learning Template to a Real Project</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html",
     "href": "08-debugging-and-acceleration.html",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "",
     "text": "9.1 A Good General Rule\nThis chapter is not tied to one specific code file. Instead, it teaches you how to work with all the code that came before.\nBecause once you start building your own tasks, the first problems are usually not “I do not know how to write version one.”\nThey are more like:\nSo the goal of this chapter is simple:\nto help you build a reliable way to debug your own projects.\nWhen something goes wrong, do not change the model first.\nCheck these first:\nMany problems are not caused by a weak model. They come from broken fundamentals.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#a-good-general-rule",
     "href": "08-debugging-and-acceleration.html#a-good-general-rule",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "",
     "text": "Is the data correct?\nAre the shapes correct?\nIs the loss function appropriate?\nIs the training loop correct?",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#if-the-loss-does-not-go-down-check-in-this-order",
     "href": "08-debugging-and-acceleration.html#if-the-loss-does-not-go-down-check-in-this-order",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "9.2 If the Loss Does Not Go Down, Check in This Order",
     "text": "9.2 If the Loss Does Not Go Down, Check in This Order\n\n9.2.1 Step 1: Inspect one batch\nStart by printing:\nprint(inputs.shape)\nprint(targets.shape)\nprint(targets[:5])\nYou want to verify:\n\nthe inputs are what you think they are\nthe labels are what you think they are\nthe batch shape is sensible\n\nA surprising number of problems show up right here.\n\n\n9.2.2 Step 2: Inspect the model output\noutputs = model(inputs)\nprint(outputs.shape)\nNow verify:\n\nthe output dimensions match the task\nthe output format matches what the loss function expects\n\nFor example, in a standard multiclass task:\n\noutputs are often [batch_size, num_classes]\nlabels are often [batch_size]\n\n\n\n9.2.3 Step 3: Make sure the loss function fits the task\nThis is easy to get wrong.\nFor example:\n\nregression often uses MSELoss\nbinary classification often uses BCEWithLogitsLoss\nmulticlass classification often uses CrossEntropyLoss\n\nIf the task and the loss do not match, the model can behave very strangely.\n\n\n9.2.4 Step 4: Verify the training loop itself\nAt minimum, check that these lines are present and ordered correctly:\noptimizer.zero_grad()\nloss.backward()\noptimizer.step()\n\n\n9.2.5 Step 5: Check whether the learning rate is extreme\nIf the learning rate is too large, the loss may oscillate or diverge.\nIf it is too small, the loss may barely move.\nA very practical debugging move is to try a few different orders of magnitude:\n\n1e-1\n1e-2\n1e-3\n1e-4",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#how-to-debug-shape-errors-quickly",
     "href": "08-debugging-and-acceleration.html#how-to-debug-shape-errors-quickly",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "9.3 How to Debug Shape Errors Quickly",
     "text": "9.3 How to Debug Shape Errors Quickly\nThe fastest method is usually not staring at the error message. It is printing shapes at key points.\nEspecially these three:\nprint(\"inputs:\", inputs.shape)\nprint(\"outputs:\", outputs.shape)\nprint(\"targets:\", targets.shape)\nIf you are working with a CNN, go one step further:\ntemporarily print intermediate shapes inside forward().\nThat is one of the fastest ways to find a dimension mismatch.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#if-validation-performance-is-bad-what-should-you-check",
     "href": "08-debugging-and-acceleration.html#if-validation-performance-is-bad-what-should-you-check",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "9.4 If Validation Performance Is Bad, What Should You Check?",
     "text": "9.4 If Validation Performance Is Bad, What Should You Check?\nIf the code runs but results are poor, start with:\n\nAre the training and validation sets properly separated?\nAre you using model.train() during training?\nAre you using model.eval() during validation?\nIs the data preprocessing reasonable?\nDoes the metric actually match the goal of the task?\n\nDo not stare only at the loss.\nSometimes loss goes down while the model is still learning the wrong thing.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#basic-gpu-and-performance-habits",
     "href": "08-debugging-and-acceleration.html#basic-gpu-and-performance-habits",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
+    "title": "9  Debugging and Speeding Things Up",
     "section": "9.5 Basic GPU and Performance Habits",
     "text": "9.5 Basic GPU and Performance Habits\nOnce you start using a GPU, build at least these habits:\n\nPut the model and data on the same device\nUse torch.no_grad() during validation\nIf memory runs out, reduce batch size first\nMake one batch work before scaling up\n\nThese are not fancy performance tricks. They are part of a stable development process.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#do-not-optimize-blindly-when-training-is-slow",
     "href": "08-debugging-and-acceleration.html#do-not-optimize-blindly-when-training-is-slow",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
-    "section": "9.6 Do Not Optimize Blindly When Training Is Slow",
-    "text": "9.6 Do Not Optimize Blindly When Training Is Slow\nFirst ask where the bottleneck actually is:\n\ndata loading\nmodel computation\nbatch size too small to use the GPU well\ntoo much unnecessary printing\n\nOptimization only helps once you know what you are optimizing.",
+    "title": "9  Debugging and Speeding Things Up",
+    "section": "9.7 Do Not Optimize Blindly When Training Is Slow",
+    "text": "9.7 Do Not Optimize Blindly When Training Is Slow\nFirst ask where the bottleneck actually is:\n\ndata loading\nmodel computation\nbatch size too small to use the GPU well\ntoo much unnecessary printing\n\nOptimization only helps once you know what you are optimizing.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "08-debugging-and-acceleration.html#a-very-practical-debugging-checklist",
     "href": "08-debugging-and-acceleration.html#a-very-practical-debugging-checklist",
-    "title": "9  Chapter 8 Debugging and Speeding Things Up",
-    "section": "9.7 A Very Practical Debugging Checklist",
-    "text": "9.7 A Very Practical Debugging Checklist\nWhen you start your own task, run through this checklist:\n\nCan I load one batch correctly?\nCan I run one forward pass?\nCan I run one backward pass?\nDo output shape and label shape match?\nDoes loss show at least some downward trend within a few dozen steps?\nIs validation performance better than random guessing?\n\nIf those six checks pass, your project is usually past the “completely broken” stage and ready for more meaningful iteration.",
+    "title": "9  Debugging and Speeding Things Up",
+    "section": "9.8 A Very Practical Debugging Checklist",
+    "text": "9.8 A Very Practical Debugging Checklist\nWhen you start your own task, run through this checklist:\n\nCan I load one batch correctly?\nCan I run one forward pass?\nCan I run one backward pass?\nDo output shape and label shape match?\nDoes loss show at least some downward trend within a few dozen steps?\nIs validation performance better than random guessing?\n\nIf those six checks pass, your project is usually past the “completely broken” stage and ready for more meaningful iteration.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chapter 8 Debugging and Speeding Things Up</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html",
     "href": "09-mini-projects.html",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "",
-    "text": "10.1 Project 1: Handwritten Digit Classifier\nYou do not really learn PyTorch by understanding examples. You learn it by building things yourself.\nHere are three project directions that work well as practice.\nGoal: build a full image classification task from scratch and get comfortable with data loading, training, validation, and model saving.\nGood things to try:",
+    "text": "10.1 Project 1: Handwritten Digit Classifier\nYou do not really learn PyTorch by understanding examples. You learn it by building things yourself.\nHere are three project directions that work well as practice.\nIf you want a stronger starting point than a blank page, the later project chapters now provide fuller templates built on ready-to-use datasets.\nGoal: build a full image classification task from scratch and get comfortable with data loading, training, validation, and model saving.\nGood things to try:",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#project-1-handwritten-digit-classifier",
     "href": "09-mini-projects.html#project-1-handwritten-digit-classifier",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "",
     "text": "change the width or depth of the model\ncompare an MLP with a CNN\nrecord training curves",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#project-2-tabular-binary-classification",
     "href": "09-mini-projects.html#project-2-tabular-binary-classification",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "10.2 Project 2: Tabular Binary Classification",
-    "text": "10.2 Project 2: Tabular Binary Classification\nGoal: use PyTorch on structured data rather than only on images.\nGood things to try:\n\nwrite a custom Dataset\nprocess numerical features\ntrain a binary classifier with BCEWithLogitsLoss",
+    "text": "10.2 Project 2: Tabular Binary Classification\nGoal: use PyTorch on structured data rather than only on images.\nGood things to try:\n\nwrite a custom Dataset\nprocess numerical features\ntrain a binary classifier with BCEWithLogitsLoss\ncompare your result with the complete tabular project workflow later in the book",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#project-3-custom-image-classification",
     "href": "09-mini-projects.html#project-3-custom-image-classification",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "10.3 Project 3: Custom Image Classification",
-    "text": "10.3 Project 3: Custom Image Classification\nGoal: use your own image folder to build a small classifier.\nGood things to try:\n\norganize your own data directory\nadd data augmentation\ntry transfer learning",
+    "text": "10.3 Project 3: Custom Image Classification\nGoal: use your own image folder to build a small classifier.\nGood things to try:\n\norganize your own data directory\nadd data augmentation\ntry transfer learning\nborrow the checkpoint and inference ideas from the later image project workflow",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#do-not-treat-projects-like-giant-assignments",
     "href": "09-mini-projects.html#do-not-treat-projects-like-giant-assignments",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "10.4 Do Not Treat Projects Like Giant Assignments",
-    "text": "10.4 Do Not Treat Projects Like Giant Assignments\nA better way to think about them is this:\nyou are reassembling the code skeletons you already studied.\nFor example:\n\nthe handwritten digit classifier is largely a remix of Chapters 5 and 6\ntabular binary classification is a remix of Chapters 4 and 10\ncustom image classification is a remix of Chapters 7 and 10\n\nThat mindset makes projects feel much less intimidating.\nYou are not writing a system out of nowhere. You are recombining pieces you already understand.",
+    "text": "10.4 Do Not Treat Projects Like Giant Assignments\nA better way to think about them is this:\nyou are reassembling the code skeletons you already studied.\nFor example:\n\nthe handwritten digit classifier is largely a remix of the MLP and CNN chapters\ntabular binary classification is a remix of the data pipeline and project template chapters\ncustom image classification is a remix of the transfer learning and project workflow chapters\n\nThat mindset makes projects feel much less intimidating.\nYou are not writing a system out of nowhere. You are recombining pieces you already understand.",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#do-not-aim-for-perfection-in-version-one",
     "href": "09-mini-projects.html#do-not-aim-for-perfection-in-version-one",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "10.5 Do Not Aim for Perfection in Version One",
     "text": "10.5 Do Not Aim for Perfection in Version One\nA better rhythm is:\n\nmake the smallest version run\nadd validation and logging\nonly then start tuning and swapping models\n\nIf you begin by trying to build a complete polished system all at once, you are much more likely to get stuck.\nAs you do these projects, keep practicing one important move:\ntranslate the task into this small checklist:\n\nWhat is the input?\nWhat is the output?\nWhat is the loss function?\nWhat is the first model version?\nWhat is the evaluation metric?\n\nThe more naturally you can answer those five questions, the closer you are to using PyTorch for your own needs.",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "09-mini-projects.html#three-extra-skills-every-project-should-teach-you",
     "href": "09-mini-projects.html#three-extra-skills-every-project-should-teach-you",
-    "title": "10  Chapter 9 Small Project Practice",
+    "title": "10  Small Project Practice",
     "section": "10.6 Three Extra Skills Every Project Should Teach You",
     "text": "10.6 Three Extra Skills Every Project Should Teach You\n\n10.6.1 1. Record your experiments\nAt minimum, write down:\n\nmodel version\nlearning rate\nbatch size\ntraining result\n\nOtherwise every new run starts to feel like starting from zero again.\n\n\n10.6.2 2. Save your models\nEven in a first project, practice saving:\n\nthe final epoch model\nor the best model on the validation set\n\n\n\n10.6.3 3. Write a minimal prediction script\nA project is not complete just because you can train.\nYou also want to be able to load a trained model and make predictions with it.\nEven a very small prediction script builds the right habit.",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Chapter 9 Small Project Practice</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Small Project Practice</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html",
     "href": "10-build-your-own-task.html",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "",
     "text": "11.1 Start with the General Template\nIf this book only leaves you able to understand the examples inside it, that is not enough.\nThe real goal is this:\nwhen you face your own task later, you should be able to translate it into a PyTorch project.\nThis chapter is here to train exactly that skill.\nOpen code/08_project_template.py.\nThe code is intentionally plain. It is not trying to show clever tricks. It is meant to give you a starting point that you can actually reshape for your own work.\nIt contains four parts that you will almost always need to modify:",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#start-with-the-general-template",
     "href": "10-build-your-own-task.html#start-with-the-general-template",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "",
     "text": "YourDataset\nYourModel\ncriterion\ntrain_one_epoch()",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#what-does-each-part-of-the-template-do",
     "href": "10-build-your-own-task.html#what-does-each-part-of-the-template-do",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.2 What Does Each Part of the Template Do?",
     "text": "11.2 What Does Each Part of the Template Do?\n\n11.2.1 YourDataset\nThis defines:\n\nwhat your raw data looks like\nwhat one sample should return\n\nIn other words, it solves the data entry problem.\n\n\n11.2.2 YourModel\nThis defines:\n\nwhich layers the input passes through\nwhat format the final output has\n\nIn other words, it solves the model structure problem.\n\n\n11.2.3 criterion\nThis defines:\n\nwhat standard you use to judge whether the current prediction is good or bad\n\nIn other words, it defines the optimization target.\n\n\n11.2.4 train_one_epoch()\nThis defines:\n\nhow parameters get updated repeatedly during one epoch of training\n\nIn other words, it defines the training process.\nWhen you begin building your own task, most of the work is some variation of editing those four parts.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#every-task-should-start-with-these-four-questions",
     "href": "10-build-your-own-task.html#every-task-should-start-with-these-four-questions",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.3 Every Task Should Start with These Four Questions",
     "text": "11.3 Every Task Should Start with These Four Questions\n\n11.3.1 1. What is your input?\nIs it images, text, tabular data, or a time series?\nThat decision affects:\n\nhow to write the Dataset\nwhat the input tensor shape should be\nwhat preprocessing is needed\n\n\n\n11.3.2 2. What is your output?\nIs it a continuous value, one category, or multiple labels?\nThat decision affects:\n\nthe design of the final output layer\nthe choice of loss function\n\n\n\n11.3.3 3. How do you define success?\nThis determines which metrics matter:\n\nregression often uses error-based metrics\nclassification often uses accuracy, recall, or similar metrics\nranking and generation tasks use different metrics again\n\n\n\n11.3.4 4. What training skeleton will you use?\nThis affects:\n\nhow batching works\nwhich optimizer you choose\nwhether you need a validation set\nwhether you should save the best model",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#turn-those-questions-into-concrete-decisions",
     "href": "10-build-your-own-task.html#turn-those-questions-into-concrete-decisions",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.4 Turn Those Questions into Concrete Decisions",
     "text": "11.4 Turn Those Questions into Concrete Decisions\nMany people still get stuck here. They know they should think about inputs and outputs, but they do not know how to turn that into code.\nSo here is a more direct way to think about it.\n\n11.4.1 If your output is a single number\nIt is probably a regression task.\nThat usually suggests:\n\noutput dimension of 1\nfloating-point labels\na loss like MSELoss\n\n\n\n11.4.2 If your output is one of two classes\nIt is probably a binary classification task.\nThat usually suggests:\n\noutput dimension of 1\na loss like BCEWithLogitsLoss\nturning the output into a probability or class prediction afterward\n\n\n\n11.4.3 If your output is one of many classes\nIt is probably a multiclass classification task.\nThat usually suggests:\n\nan output dimension equal to the number of classes\na loss like CrossEntropyLoss\nlabels stored as class indices",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#how-might-you-modify-the-template",
     "href": "10-build-your-own-task.html#how-might-you-modify-the-template",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.5 How Might You Modify the Template?",
     "text": "11.5 How Might You Modify the Template?\n\n11.5.1 For tabular binary classification\nYou would often change:\n\nYourDataset: load tabular features and labels\nYourModel: make the final output 1-dimensional\ncriterion: switch to BCEWithLogitsLoss\n\n\n\n11.5.2 For multiclass image classification\nYou would often change:\n\nYourDataset: use an image dataset\nYourModel: use a CNN or a pretrained model\ncriterion: keep CrossEntropyLoss\n\n\n\n11.5.3 For regression\nYou would often change:\n\nthe final output dimension to 1\nthe labels to floating-point values\nthe loss to MSELoss",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#one-step-further-how-do-you-go-from-a-task-description-to-code",
     "href": "10-build-your-own-task.html#one-step-further-how-do-you-go-from-a-task-description-to-code",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.6 One Step Further: How Do You Go from a Task Description to Code?",
     "text": "11.6 One Step Further: How Do You Go from a Task Description to Code?\nSuppose your future task sounds like one of these:\n\n“I want to predict whether a user will churn from tabular features.”\n“I want to sort my own fruit photos into four classes.”\n“I want to predict tomorrow’s sales from historical values.”\n\nForce yourself to write these five sentences first:\n\nWhat shape is my input?\nWhat type of output do I need?\nHow should I prepare the labels?\nWhat is the simplest sensible first model?\nWhat are my loss function and metric?\n\nIf you can answer those five questions clearly, your code already has a direction.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#what-you-really-want-to-carry-forward",
     "href": "10-build-your-own-task.html#what-you-really-want-to-carry-forward",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.7 What You Really Want to Carry Forward",
     "text": "11.7 What You Really Want to Carry Forward\nNot one exact code snippet, but a decision framework:\n\nidentify the task type\ndefine the input and output format\nmatch the model and loss function to the task\nplug everything into a training template\n\nOnce that framework becomes natural, new tasks stop feeling like they require starting from zero.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#an-important-exercise",
     "href": "10-build-your-own-task.html#an-important-exercise",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.8 An Important Exercise",
     "text": "11.8 An Important Exercise\nPick one small task you genuinely care about and write only these four lines:\n\nWhat is my input?\nWhat is my output?\nWhat loss function will I probably use?\nWhat should the first version of my model be?\n\nIf you can do that on your own, you have already started using PyTorch for your own needs.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "10-build-your-own-task.html#this-chapter-is-really-the-destination-of-the-whole-book",
     "href": "10-build-your-own-task.html#this-chapter-is-really-the-destination-of-the-whole-book",
-    "title": "11  Chapter 10 Translating Your Own Problem into PyTorch",
+    "title": "11  Translating Your Own Problem into PyTorch",
     "section": "11.9 This Chapter Is Really the Destination of the Whole Book",
-    "text": "11.9 This Chapter Is Really the Destination of the Whole Book\nEverything earlier in the book points here:\n\ntensors and shapes help you describe inputs and outputs\nautograd and training loops help you understand how learning happens\nDataset and DataLoader help you organize your own data\nMLPs, CNNs, and transfer learning give you several practical modeling starting points\n\nSo by the end, the most important thing is not “how many APIs did I memorize?”\nIt is this:\n“When I get a new problem, I know how to begin the first version of a PyTorch project.”",
+    "text": "11.9 This Chapter Is Really the Destination of the Whole Book\nEverything earlier in the book points here:\n\ntensors and shapes help you describe inputs and outputs\nautograd and training loops help you understand how learning happens\nDataset and DataLoader help you organize your own data\nMLPs, CNNs, and transfer learning give you several practical modeling starting points\nthe full project chapters show how to turn those starting points into trainable workflows with validation, checkpoints, and inference\n\nSo by the end, the most important thing is not “how many APIs did I memorize?”\nIt is this:\n“When I get a new problem, I know how to begin the first version of a PyTorch project.”",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Chapter 10 Translating Your Own Problem into PyTorch</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Translating Your Own Problem into PyTorch</span>"
     ]
   },
   {
     "objectID": "summary.html",
     "href": "summary.html",
-    "title": "12  Summary",
+    "title": "16  Summary",
     "section": "",
-    "text": "The core idea of this version of the book is code first, from the ground up.\nThat means we do not start by piling up abstract concepts and then adding a few examples at the end. Instead, we start with a chain of runnable code and pull out the ideas from there: tensors, gradients, training, data flow, and model design.\nIf you work through the code/ directory in order, you build a stable mental path:\n\nunderstand tensors and shapes\nunderstand gradients and backpropagation\nunderstand the training loop\nunderstand how data becomes batches\nunderstand how classification models come together\nunderstand how CNNs and transfer learning expand what you can build\n\nOnce you can look at a training script and quickly locate the data, model, loss, optimizer, and validation logic, PyTorch stops feeling like scattered knowledge.\nMore importantly, this book is trying to build transfer ability:\nwhen a new task appears in front of you, you should be able to break it into inputs, outputs, a dataset, a model, a loss function, and a training process, instead of hunting for a tutorial that matches it perfectly.\nOnce you can do that, PyTorch has started to become your tool rather than just something you studied.",
+    "text": "The core idea of this version of the book is code first, from the ground up.\nThat means we do not start by piling up abstract concepts and then adding a few examples at the end. Instead, we start with a chain of runnable code and pull out the ideas from there: tensors, gradients, training, data flow, and model design.\nIf you work through the code/ directory in order, you build a stable mental path:\n\nunderstand tensors and shapes\nunderstand gradients and backpropagation\nunderstand the training loop\nunderstand how data becomes batches\nunderstand how classification models come together\nunderstand how CNNs and transfer learning expand what you can build\n\nThe later project chapters push that foundation further by showing how to build fuller workflows for tabular classification and image classification, including validation, checkpointing, inference, and stronger training habits.\nOnce you can look at a training script and quickly locate the data, model, loss, optimizer, and validation logic, PyTorch stops feeling like scattered knowledge.\nMore importantly, this book is trying to build transfer ability:\nwhen a new task appears in front of you, you should be able to break it into inputs, outputs, a dataset, a model, a loss function, a training process, and a validation strategy, instead of hunting for a tutorial that matches it perfectly.\nThat still does not make you an expert. But it does move you much closer to what most learners actually want: the ability to start common projects on your own, debug the usual failures, and improve a baseline without feeling lost.\nOnce you can do that, PyTorch has started to become your tool rather than just something you studied.",
     "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "08-debugging-and-acceleration.html#device-selection-on-different-machines",
+    "href": "08-debugging-and-acceleration.html#device-selection-on-different-machines",
+    "title": "9  Debugging and Speeding Things Up",
+    "section": "9.6 Device Selection on Different Machines",
+    "text": "9.6 Device Selection on Different Machines\nMany tutorials casually assume that GPU means CUDA, but that is not always true.\nIn practice, a simple device selection pattern should cover three common cases:\nif torch.cuda.is_available():\n    device = torch.device(\"cuda\")\nelif torch.backends.mps.is_available():\n    device = torch.device(\"mps\")\nelse:\n    device = torch.device(\"cpu\")\nThis matters especially if you are using Apple Silicon.\nOn a Mac with M-series chips, PyTorch may use mps instead of cuda. The overall workflow is the same, but the device name is different.\nWhen debugging on Apple Silicon, a useful rule is:\n\nif mps works, use it\nif you hit a strange backend issue, test the same code on cpu\nverify correctness first, then think about speed\n\nThat simple habit can save a lot of time.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Debugging and Speeding Things Up</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html",
+    "href": "11-tabular-binary-classification.html",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "",
+    "text": "12.1 Why This Chapter Matters\nUp to this point, most of the code in the book has taught core ideas and reusable patterns.\nThis chapter shifts the emphasis. Here we walk through a complete tabular project, from real features to validation accuracy to checkpoint saving.\nThe code for this chapter lives in code/09_tabular_binary_classification.py.\nA lot of PyTorch learning materials stay close to image tasks. That is useful, but it leaves a gap:\nmany real problems are not image problems at all.\nYou may need to:\nThose are usually tabular tasks, and the project workflow looks a little different from image classification.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#why-this-chapter-matters",
+    "href": "11-tabular-binary-classification.html#why-this-chapter-matters",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "",
+    "text": "predict churn\nclassify medical records\nscore leads\ndetect fraud\nestimate whether a transaction is risky",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#the-dataset-no-manual-collection-required",
+    "href": "11-tabular-binary-classification.html#the-dataset-no-manual-collection-required",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.2 The Dataset: No Manual Collection Required",
+    "text": "12.2 The Dataset: No Manual Collection Required\nThis chapter uses the breast cancer dataset built into scikit-learn.\nThat gives us a practical binary classification task without asking you to collect, clean, or label data by hand.\nThe example focuses on the workflow:\n\nload the dataset\nsplit it into train and validation sets\nstandardize the features\nwrap the data in a PyTorch Dataset\ntrain a binary classifier\nevaluate it and save the best checkpoint",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#what-the-code-is-teaching-beyond-the-model",
+    "href": "11-tabular-binary-classification.html#what-the-code-is-teaching-beyond-the-model",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.3 What the Code Is Teaching Beyond the Model",
+    "text": "12.3 What the Code Is Teaching Beyond the Model\nThe model itself is small. That is deliberate.\nThe real lessons in this file are:\n\nhow to prepare tabular features\nwhy standardization matters\nhow binary labels differ from multiclass labels\nwhy BCEWithLogitsLoss is the right loss here\nhow to save the best model instead of only the last one",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#the-shape-of-the-problem",
+    "href": "11-tabular-binary-classification.html#the-shape-of-the-problem",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.4 The Shape of the Problem",
+    "text": "12.4 The Shape of the Problem\nFor a tabular binary classification task, the basic structure is usually:\n\ninput: [batch_size, num_features]\noutput: [batch_size] or [batch_size, 1]\ntarget: binary labels such as 0 and 1\n\nThat is already different from the image classification tasks earlier in the book.\nAnd that difference matters, because it changes:\n\nthe last layer of the model\nthe loss function\nthe way predictions are turned into class labels",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#why-bcewithlogitsloss-fits-this-task",
+    "href": "11-tabular-binary-classification.html#why-bcewithlogitsloss-fits-this-task",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.5 Why BCEWithLogitsLoss Fits This Task",
+    "text": "12.5 Why BCEWithLogitsLoss Fits This Task\nIn this project, the model outputs one raw score per sample.\nThat score is not yet a probability. It is a logit.\nBCEWithLogitsLoss is designed for exactly that setup:\n\none output value per sample\nbinary labels\nno separate sigmoid in the model definition\n\nWhen you want predicted labels, you can apply sigmoid during evaluation and threshold at 0.5.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#the-workflow-you-should-learn-here",
+    "href": "11-tabular-binary-classification.html#the-workflow-you-should-learn-here",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.6 The Workflow You Should Learn Here",
+    "text": "12.6 The Workflow You Should Learn Here\nThis chapter is not only about this dataset.\nIt is really teaching a repeatable workflow for tabular classification:\n\nsplit the data correctly\nstandardize the features using only the training split\nbuild a small baseline model first\nvalidate every epoch\nsave the checkpoint with the best validation result\n\nIf you can repeat that workflow on your own, you are no longer just experimenting. You are building projects.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "11-tabular-binary-classification.html#what-you-should-be-able-to-do-after-this-chapter",
+    "href": "11-tabular-binary-classification.html#what-you-should-be-able-to-do-after-this-chapter",
+    "title": "12  A Full Tabular Binary Classification Project",
+    "section": "12.7 What You Should Be Able to Do After This Chapter",
+    "text": "12.7 What You Should Be Able to Do After This Chapter\nAfter working through this file, you should be able to:\n\ntake a tabular binary classification dataset and feed it into PyTorch\nchoose a reasonable baseline network\nuse the right loss function for binary classification\nmonitor validation accuracy\nsave the best checkpoint for later use\n\nThat is already much closer to real project work than a toy demo.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>A Full Tabular Binary Classification Project</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html",
+    "href": "12-image-project-workflow.html",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "",
+    "text": "13.1 Why This Chapter Matters\nThe earlier image chapters taught the model side of image classification. This chapter teaches the full workflow of an image project.\nThe main code is in:\nTogether, these two files move from training to validation to checkpointing to inference.\nA lot of beginners can train a model once, but still do not feel able to run a real project.\nThat usually happens because the missing pieces are not the neural network layers themselves. The missing pieces are things like:\nThose are exactly the habits that turn a script into a project.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#why-this-chapter-matters",
+    "href": "12-image-project-workflow.html#why-this-chapter-matters",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "",
+    "text": "train/validation splitting\nmodel checkpointing\ntest evaluation\nloading a saved model later\nrunning actual predictions",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#what-this-chapter-adds-beyond-earlier-image-examples",
+    "href": "12-image-project-workflow.html#what-this-chapter-adds-beyond-earlier-image-examples",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "13.2 What This Chapter Adds Beyond Earlier Image Examples",
+    "text": "13.2 What This Chapter Adds Beyond Earlier Image Examples\nThis code still uses FashionMNIST, so you do not need to collect data yourself.\nBut it is more realistic than the earlier CNN example because it includes:\n\na train/validation split\nnormalization\na slightly stronger CNN baseline\na learning rate scheduler\nbest-model checkpoint saving\na separate inference script\n\nThat is much closer to how you would structure a first real image project.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#what-the-training-script-teaches",
+    "href": "12-image-project-workflow.html#what-the-training-script-teaches",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "13.3 What the Training Script Teaches",
+    "text": "13.3 What the Training Script Teaches\ncode/10_image_classification_project.py teaches a workflow that is worth reusing:\n\nbuild dataloaders\ndefine the model\nchoose the loss, optimizer, and scheduler\ntrain for multiple epochs\nvalidate every epoch\nsave the best checkpoint\nreload the best checkpoint before final test evaluation\n\nThat last step is easy to skip when you are new, but it matters.\nYou do not usually want to report results from the last epoch by default. You want results from the best validation checkpoint.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#what-the-inference-script-teaches",
+    "href": "12-image-project-workflow.html#what-the-inference-script-teaches",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "13.4 What the Inference Script Teaches",
+    "text": "13.4 What the Inference Script Teaches\ncode/11_checkpoint_inference.py is small, but it teaches a critical habit:\ntraining is only part of the project.\nYou also need to be able to:\n\nload a trained model\nswitch it to evaluation mode\nrun predictions on new data\nmap output indices back to readable class names\n\nWithout that step, many “trained models” never become usable tools.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#the-project-mindset-this-chapter-is-trying-to-build",
+    "href": "12-image-project-workflow.html#the-project-mindset-this-chapter-is-trying-to-build",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "13.5 The Project Mindset This Chapter Is Trying to Build",
+    "text": "13.5 The Project Mindset This Chapter Is Trying to Build\nWhen you start your own image task later, a good first version usually looks like this:\n\nuse a small but working baseline\nsplit train and validation cleanly\nlog both loss and accuracy\nsave the best checkpoint\nwrite a simple inference script immediately\n\nThat is a much better habit than training a model once, seeing a number, and moving on.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "12-image-project-workflow.html#what-you-should-be-able-to-do-after-this-chapter",
+    "href": "12-image-project-workflow.html#what-you-should-be-able-to-do-after-this-chapter",
+    "title": "13  A Complete Image Classification Workflow",
+    "section": "13.6 What You Should Be Able to Do After This Chapter",
+    "text": "13.6 What You Should Be Able to Do After This Chapter\nAfter this chapter, you should be able to:\n\nstructure a complete image classification training script\ndistinguish training, validation, and test responsibilities\nsave and reload the best checkpoint\nwrite a minimal inference pipeline\nadapt the workflow to your own image dataset later\n\nThis is one of the chapters that most directly supports your goal of building complete projects on your own.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>A Complete Image Classification Workflow</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html",
+    "href": "13-training-engineering.html",
+    "title": "14  Training Engineering Habits",
+    "section": "",
+    "text": "14.1 What “Training Engineering” Means at This Level\nIf you want to become reasonably independent with PyTorch, understanding models is not enough.\nYou also need training habits that make your work repeatable, debuggable, and easier to improve.\nThis chapter builds on the project code from Chapters 11 and 12.\nAt this stage, training engineering does not mean building a complex internal platform.\nIt means learning a set of practical habits:\nThese habits are simple, but they create a big jump in project quality.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#what-training-engineering-means-at-this-level",
+    "href": "13-training-engineering.html#what-training-engineering-means-at-this-level",
+    "title": "14  Training Engineering Habits",
+    "section": "",
+    "text": "set random seeds\nseparate train and validation logic\nsave the best checkpoint\nkeep metrics for every epoch\norganize artifacts in a predictable place\nreload the best checkpoint before final evaluation",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#device-handling-is-part-of-engineering",
+    "href": "13-training-engineering.html#device-handling-is-part-of-engineering",
+    "title": "14  Training Engineering Habits",
+    "section": "14.2 Device Handling Is Part of Engineering",
+    "text": "14.2 Device Handling Is Part of Engineering\nEven a small project benefits from handling devices cleanly.\nIn this book, the recommended pattern is:\n\nprefer cuda when it is available\notherwise use mps on Apple Silicon when available\notherwise fall back to cpu\n\nThat may sound minor, but it makes your code more portable across machines.\nIt also helps prevent a common beginner mistake: assuming that every GPU setup uses CUDA.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#why-baselines-matter",
+    "href": "13-training-engineering.html#why-baselines-matter",
+    "title": "14  Training Engineering Habits",
+    "section": "14.3 Why Baselines Matter",
+    "text": "14.3 Why Baselines Matter\nOne of the most common mistakes in self-study is trying to start with an ambitious model.\nA better pattern is:\n\nbuild the smallest correct baseline\nmake sure the full pipeline works\nonly then improve the model\n\nIf the baseline is weak but stable, you can improve it.\nIf the baseline is complicated and broken, you usually lose time without learning much.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#the-role-of-validation",
+    "href": "13-training-engineering.html#the-role-of-validation",
+    "title": "14  Training Engineering Habits",
+    "section": "14.4 The Role of Validation",
+    "text": "14.4 The Role of Validation\nValidation is where you decide whether training is actually improving your model in a useful way.\nWithout a validation split, it is easy to confuse:\n\nmemorization with learning\nlower training loss with better generalization\nlonger training with real improvement\n\nThat is why the later project scripts validate every epoch and track the best result.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#why-checkpointing-changes-everything",
+    "href": "13-training-engineering.html#why-checkpointing-changes-everything",
+    "title": "14  Training Engineering Habits",
+    "section": "14.5 Why Checkpointing Changes Everything",
+    "text": "14.5 Why Checkpointing Changes Everything\nCheckpointing sounds like a minor engineering detail, but it changes how you work.\nOnce you save the best model, you can:\n\nstop worrying about losing your strongest version\nreload the model later for inference\ncompare experiments more cleanly\nseparate training from deployment\n\nThat is one of the habits that makes a project feel real.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#what-metrics-should-you-record",
+    "href": "13-training-engineering.html#what-metrics-should-you-record",
+    "title": "14  Training Engineering Habits",
+    "section": "14.6 What Metrics Should You Record?",
+    "text": "14.6 What Metrics Should You Record?\nAt minimum, record:\n\nepoch number\ntraining loss\nvalidation loss\nvalidation metric such as accuracy\ncheckpoint path for the best run\n\nYou do not need a heavy experiment platform to start.\nEven a clean console log or a small CSV file can be enough.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#the-engineering-mindset-this-book-wants-you-to-learn",
+    "href": "13-training-engineering.html#the-engineering-mindset-this-book-wants-you-to-learn",
+    "title": "14  Training Engineering Habits",
+    "section": "14.7 The Engineering Mindset This Book Wants You to Learn",
+    "text": "14.7 The Engineering Mindset This Book Wants You to Learn\nWhen you build a new project, do not just ask:\n\nwhat model should I use?\n\nAlso ask:\n\nhow will I know whether the run improved?\nhow will I save the best model?\nhow will I use the model afterward?\nhow will I compare one run with another?\n\nThose questions are part of practical PyTorch work.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "13-training-engineering.html#a-good-minimum-standard-for-your-own-projects",
+    "href": "13-training-engineering.html#a-good-minimum-standard-for-your-own-projects",
+    "title": "14  Training Engineering Habits",
+    "section": "14.8 A Good Minimum Standard for Your Own Projects",
+    "text": "14.8 A Good Minimum Standard for Your Own Projects\nBefore calling a project “done enough to learn from,” try to include:\n\ntrain/validation split\na baseline model\nepoch-level metrics\nbest-model checkpoint saving\na prediction or inference script\n\nIf your project has those five pieces, you are already working at a much stronger level than “I only managed to run a notebook once.”",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Training Engineering Habits</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html",
+    "href": "14-common-failures.html",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "",
+    "text": "15.1 Failure 1: The Code Runs, but Loss Barely Moves\nEarlier in the book we introduced debugging habits. This chapter goes one step further and organizes common failures into patterns you can recognize.\nThat matters because independence in PyTorch is not just about writing code. It is about recovering when the code does not behave the way you expected.\nCommon causes:\nGood first checks:",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#failure-1-the-code-runs-but-loss-barely-moves",
+    "href": "14-common-failures.html#failure-1-the-code-runs-but-loss-barely-moves",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "",
+    "text": "learning rate is too small\nmodel output and loss function do not match\nlabels are in the wrong format\nfeatures are poorly scaled\nthe model is too weak for the task\n\n\n\nverify shapes\nverify label dtype\ntry a different learning rate\ninspect one batch manually",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#failure-2-loss-goes-down-but-validation-stays-weak",
+    "href": "14-common-failures.html#failure-2-loss-goes-down-but-validation-stays-weak",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.2 Failure 2: Loss Goes Down, but Validation Stays Weak",
+    "text": "15.2 Failure 2: Loss Goes Down, but Validation Stays Weak\nCommon causes:\n\noverfitting\ntrain/validation mismatch\ndata leakage in preprocessing\nmetric does not reflect the actual task\n\nGood first checks:\n\ncompare train and validation behavior side by side\nmake sure preprocessing is fit on training data only\nreduce model capacity or add regularization\ninspect mistakes, not just averages",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#failure-3-shape-errors-keep-appearing",
+    "href": "14-common-failures.html#failure-3-shape-errors-keep-appearing",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.3 Failure 3: Shape Errors Keep Appearing",
+    "text": "15.3 Failure 3: Shape Errors Keep Appearing\nCommon causes:\n\nwrong flatten size before a linear layer\nlabels have an extra dimension\noutput dimension does not match the loss\nbatching changed the shape in a way you forgot\n\nGood first checks:\n\nprint inputs.shape\nprint outputs.shape\nprint targets.shape\nprint intermediate shapes inside forward()",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#failure-4-the-gpu-is-available-but-training-is-still-slow",
+    "href": "14-common-failures.html#failure-4-the-gpu-is-available-but-training-is-still-slow",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.4 Failure 4: The GPU Is Available, but Training Is Still Slow",
+    "text": "15.4 Failure 4: The GPU Is Available, but Training Is Still Slow\nCommon causes:\n\nbatch size is too small\ndata loading is the real bottleneck\nCPU preprocessing dominates runtime\ntoo much logging slows the loop down\n\nGood first checks:\n\nconfirm model and data are on the same device\nincrease batch size if memory allows\nreduce unnecessary prints\nseparate data-loading issues from model-compute issues",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#failure-5-the-model-looks-fine-during-training-but-you-cannot-use-it-later",
+    "href": "14-common-failures.html#failure-5-the-model-looks-fine-during-training-but-you-cannot-use-it-later",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.5 Failure 5: The Model Looks Fine During Training, but You Cannot Use It Later",
+    "text": "15.5 Failure 5: The Model Looks Fine During Training, but You Cannot Use It Later\nCommon causes:\n\nno checkpoint was saved\nonly the last model was kept\nno inference script exists\nclass names or preprocessing steps were not preserved\n\nGood first checks:\n\nsave the best checkpoint during training\nwrite a minimal inference script immediately\nkeep preprocessing consistent between training and inference",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#a-better-way-to-think-about-failures",
+    "href": "14-common-failures.html#a-better-way-to-think-about-failures",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.6 A Better Way to Think About Failures",
+    "text": "15.6 A Better Way to Think About Failures\nWhen something breaks, try not to think:\n\n“I must not be good at this.”\n\nA better question is:\n\n“Which part of the pipeline is most likely wrong?”\n\nThat shift matters.\nStrong practitioners do not avoid mistakes. They learn to localize them faster.",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
+    ]
+  },
+  {
+    "objectID": "14-common-failures.html#the-recovery-loop-you-should-practice",
+    "href": "14-common-failures.html#the-recovery-loop-you-should-practice",
+    "title": "15  Common Failure Modes and How to Recover",
+    "section": "15.7 The Recovery Loop You Should Practice",
+    "text": "15.7 The Recovery Loop You Should Practice\nWhen a run fails, go through this sequence:\n\nreduce the problem to one batch\nverify shapes and dtypes\nverify the loss function and target format\nmake sure train/eval modes are correct\ntry a simpler baseline if needed\nonly then increase complexity again\n\nThis recovery loop is one of the most practical skills in the entire book.",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Common Failure Modes and How to Recover</span>"
     ]
   }
 ]

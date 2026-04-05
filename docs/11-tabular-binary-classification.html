@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; From Tensor Code to Gradient Code – Learning PyTorch from Scratch</title>
+<title>12&nbsp; A Full Tabular Binary Classification Project – Learning PyTorch from Scratch</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./03-training-loop.html" rel="next">
-<link href="./01-roadmap.html" rel="prev">
+<link href="./12-image-project-workflow.html" rel="next">
+<link href="./10-build-your-own-task.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -118,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-tensors-and-autograd.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From Tensor Code to Gradient Code</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-tabular-binary-classification.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Full Tabular Binary Classification Project</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -165,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-tensors-and-autograd.html" class="sidebar-item-text sidebar-link active">
+  <a href="./02-tensors-and-autograd.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From Tensor Code to Gradient Code</span></span></a>
   </div>
 </li>
@@ -219,7 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-tabular-binary-classification.html" class="sidebar-item-text sidebar-link">
+  <a href="./11-tabular-binary-classification.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Full Tabular Binary Classification Project</span></span></a>
   </div>
 </li>
@@ -263,24 +228,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#read-code01_tensor_basics.py-line-by-line" id="toc-read-code01_tensor_basics.py-line-by-line" class="nav-link active" data-scroll-target="#read-code01_tensor_basics.py-line-by-line"><span class="header-section-number">3.1</span> Read <code>code/01_tensor_basics.py</code> Line by Line</a>
-  <ul class="collapse">
-  <li><a href="#step-1-create-a-1d-tensor" id="toc-step-1-create-a-1d-tensor" class="nav-link" data-scroll-target="#step-1-create-a-1d-tensor"><span class="header-section-number">3.1.1</span> Step 1: Create a 1D tensor</a></li>
-  <li><a href="#step-2-turn-a-1d-tensor-into-a-matrix" id="toc-step-2-turn-a-1d-tensor-into-a-matrix" class="nav-link" data-scroll-target="#step-2-turn-a-1d-tensor-into-a-matrix"><span class="header-section-number">3.1.2</span> Step 2: Turn a 1D tensor into a matrix</a></li>
-  <li><a href="#step-3-add-a-batch-dimension-by-hand" id="toc-step-3-add-a-batch-dimension-by-hand" class="nav-link" data-scroll-target="#step-3-add-a-batch-dimension-by-hand"><span class="header-section-number">3.1.3</span> Step 3: Add a batch dimension by hand</a></li>
-  <li><a href="#step-4-flatten-each-sample-again" id="toc-step-4-flatten-each-sample-again" class="nav-link" data-scroll-target="#step-4-flatten-each-sample-again"><span class="header-section-number">3.1.4</span> Step 4: Flatten each sample again</a></li>
-  </ul></li>
-  <li><a href="#what-should-you-watch-for-in-tensor-code" id="toc-what-should-you-watch-for-in-tensor-code" class="nav-link" data-scroll-target="#what-should-you-watch-for-in-tensor-code"><span class="header-section-number">3.2</span> What Should You Watch for in Tensor Code?</a></li>
-  <li><a href="#why-shape-usually-matters-more-than-values" id="toc-why-shape-usually-matters-more-than-values" class="nav-link" data-scroll-target="#why-shape-usually-matters-more-than-values"><span class="header-section-number">3.3</span> Why Shape Usually Matters More Than Values</a></li>
-  <li><a href="#now-read-code02_autograd_basics.py-line-by-line" id="toc-now-read-code02_autograd_basics.py-line-by-line" class="nav-link" data-scroll-target="#now-read-code02_autograd_basics.py-line-by-line"><span class="header-section-number">3.4</span> Now Read <code>code/02_autograd_basics.py</code> Line by Line</a>
-  <ul class="collapse">
-  <li><a href="#step-1-compute-the-prediction" id="toc-step-1-compute-the-prediction" class="nav-link" data-scroll-target="#step-1-compute-the-prediction"><span class="header-section-number">3.4.1</span> Step 1: Compute the prediction</a></li>
-  <li><a href="#step-2-compute-the-loss" id="toc-step-2-compute-the-loss" class="nav-link" data-scroll-target="#step-2-compute-the-loss"><span class="header-section-number">3.4.2</span> Step 2: Compute the loss</a></li>
-  <li><a href="#step-3-run-backpropagation" id="toc-step-3-run-backpropagation" class="nav-link" data-scroll-target="#step-3-run-backpropagation"><span class="header-section-number">3.4.3</span> Step 3: Run backpropagation</a></li>
-  </ul></li>
-  <li><a href="#put-the-two-files-together" id="toc-put-the-two-files-together" class="nav-link" data-scroll-target="#put-the-two-files-together"><span class="header-section-number">3.5</span> Put the Two Files Together</a></li>
-  <li><a href="#the-big-ideas-behind-the-code" id="toc-the-big-ideas-behind-the-code" class="nav-link" data-scroll-target="#the-big-ideas-behind-the-code"><span class="header-section-number">3.6</span> The Big Ideas Behind the Code</a></li>
-  <li><a href="#what-you-should-change-yourself" id="toc-what-you-should-change-yourself" class="nav-link" data-scroll-target="#what-you-should-change-yourself"><span class="header-section-number">3.7</span> What You Should Change Yourself</a></li>
+  <li><a href="#why-this-chapter-matters" id="toc-why-this-chapter-matters" class="nav-link active" data-scroll-target="#why-this-chapter-matters"><span class="header-section-number">12.1</span> Why This Chapter Matters</a></li>
+  <li><a href="#the-dataset-no-manual-collection-required" id="toc-the-dataset-no-manual-collection-required" class="nav-link" data-scroll-target="#the-dataset-no-manual-collection-required"><span class="header-section-number">12.2</span> The Dataset: No Manual Collection Required</a></li>
+  <li><a href="#what-the-code-is-teaching-beyond-the-model" id="toc-what-the-code-is-teaching-beyond-the-model" class="nav-link" data-scroll-target="#what-the-code-is-teaching-beyond-the-model"><span class="header-section-number">12.3</span> What the Code Is Teaching Beyond the Model</a></li>
+  <li><a href="#the-shape-of-the-problem" id="toc-the-shape-of-the-problem" class="nav-link" data-scroll-target="#the-shape-of-the-problem"><span class="header-section-number">12.4</span> The Shape of the Problem</a></li>
+  <li><a href="#why-bcewithlogitsloss-fits-this-task" id="toc-why-bcewithlogitsloss-fits-this-task" class="nav-link" data-scroll-target="#why-bcewithlogitsloss-fits-this-task"><span class="header-section-number">12.5</span> Why <code>BCEWithLogitsLoss</code> Fits This Task</a></li>
+  <li><a href="#the-workflow-you-should-learn-here" id="toc-the-workflow-you-should-learn-here" class="nav-link" data-scroll-target="#the-workflow-you-should-learn-here"><span class="header-section-number">12.6</span> The Workflow You Should Learn Here</a></li>
+  <li><a href="#what-you-should-be-able-to-do-after-this-chapter" id="toc-what-you-should-be-able-to-do-after-this-chapter" class="nav-link" data-scroll-target="#what-you-should-be-able-to-do-after-this-chapter"><span class="header-section-number">12.7</span> What You Should Be Able to Do After This Chapter</a></li>
   </ul>
 </nav>
     </div>
@@ -289,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">From Tensor Code to Gradient Code</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Full Tabular Binary Classification Project</span></h1>
 </div>
 
 
@@ -306,168 +260,101 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter revolves around just two files:</p>
+<p>Up to this point, most of the code in the book has taught core ideas and reusable patterns.</p>
+<p>This chapter shifts the emphasis. Here we walk through a complete tabular project, from real features to validation accuracy to checkpoint saving.</p>
+<p>The code for this chapter lives in <code>code/09_tabular_binary_classification.py</code>.</p>
+<section id="why-this-chapter-matters" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="why-this-chapter-matters"><span class="header-section-number">12.1</span> Why This Chapter Matters</h2>
+<p>A lot of PyTorch learning materials stay close to image tasks. That is useful, but it leaves a gap:</p>
+<p>many real problems are not image problems at all.</p>
+<p>You may need to:</p>
 <ul>
-<li><code>code/01_tensor_basics.py</code></li>
-<li><code>code/02_autograd_basics.py</code></li>
+<li>predict churn</li>
+<li>classify medical records</li>
+<li>score leads</li>
+<li>detect fraud</li>
+<li>estimate whether a transaction is risky</li>
 </ul>
-<p>Run both of them before reading too deeply. The ideas are much easier to understand once you have seen the code in action.</p>
-<section id="read-code01_tensor_basics.py-line-by-line" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="read-code01_tensor_basics.py-line-by-line"><span class="header-section-number">3.1</span> Read <code>code/01_tensor_basics.py</code> Line by Line</h2>
-<p>This file is short, which makes it a good place to practice reading PyTorch carefully.</p>
-<section id="step-1-create-a-1d-tensor" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="step-1-create-a-1d-tensor"><span class="header-section-number">3.1.1</span> Step 1: Create a 1D tensor</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>inspect_tensor(<span class="st">"x"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>There are two things to notice here:</p>
+<p>Those are usually tabular tasks, and the project workflow looks a little different from image classification.</p>
+</section>
+<section id="the-dataset-no-manual-collection-required" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="the-dataset-no-manual-collection-required"><span class="header-section-number">12.2</span> The Dataset: No Manual Collection Required</h2>
+<p>This chapter uses the breast cancer dataset built into scikit-learn.</p>
+<p>That gives us a practical binary classification task without asking you to collect, clean, or label data by hand.</p>
+<p>The example focuses on the workflow:</p>
 <ol type="1">
-<li><code>torch.arange(12)</code> creates 12 numbers, from 0 through 11.</li>
-<li><code>dtype=torch.float32</code> stores them as floating-point values.</li>
-</ol>
-<p>At this point, the shape of <code>x</code> is <code>[12]</code>.</p>
-<p>Do not rush past that. Start building the habit of asking:</p>
-<p>what is the dimensionality of this tensor, and what is its shape right now?</p>
-</section>
-<section id="step-2-turn-a-1d-tensor-into-a-matrix" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="step-2-turn-a-1d-tensor-into-a-matrix"><span class="header-section-number">3.1.2</span> Step 2: Turn a 1D tensor into a matrix</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>matrix <span class="op">=</span> x.reshape(<span class="dv">3</span>, <span class="dv">4</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>inspect_tensor(<span class="st">"matrix"</span>, matrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This step does not change the data values. It changes how the data is organized.</p>
-<p>In other words:</p>
-<ul>
-<li>the values are still the same 12 values</li>
-<li>but the view changes from one long vector into a <code>3 x 4</code> matrix</li>
-</ul>
-<p>That is one of the most important ideas in early PyTorch learning:</p>
-<p>many operations change shape rather than changing the values themselves.</p>
-</section>
-<section id="step-3-add-a-batch-dimension-by-hand" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="step-3-add-a-batch-dimension-by-hand"><span class="header-section-number">3.1.3</span> Step 3: Add a batch dimension by hand</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> matrix.unsqueeze(<span class="dv">0</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>inspect_tensor(<span class="st">"batch"</span>, batch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>unsqueeze(0)</code> inserts a new dimension of length 1 at dimension 0.</p>
-<p>So the shape changes from:</p>
-<ul>
-<li><code>[3, 4]</code></li>
-</ul>
-<p>to:</p>
-<ul>
-<li><code>[1, 3, 4]</code></li>
-</ul>
-<p>Why does this matter?</p>
-<p>Because real models usually process batches of samples, not just one sample at a time.</p>
-<p>That extra first dimension is often the batch dimension.</p>
-</section>
-<section id="step-4-flatten-each-sample-again" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="step-4-flatten-each-sample-again"><span class="header-section-number">3.1.4</span> Step 4: Flatten each sample again</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>flattened <span class="op">=</span> batch.flatten(start_dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>inspect_tensor(<span class="st">"flattened"</span>, flattened)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Here <code>start_dim=1</code> means:</p>
-<ul>
-<li>keep dimension 0 unchanged</li>
-<li>flatten everything from dimension 1 onward</li>
-</ul>
-<p>So the shape changes from <code>[1, 3, 4]</code> to <code>[1, 12]</code>.</p>
-<p>This is the same basic idea you will later see in <code>Flatten()</code> layers inside MLP models.</p>
-<p>Even though this example is tiny, you are already looking at one of the most common shape transformations in neural network code.</p>
-</section>
-</section>
-<section id="what-should-you-watch-for-in-tensor-code" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="what-should-you-watch-for-in-tensor-code"><span class="header-section-number">3.2</span> What Should You Watch for in Tensor Code?</h2>
-<p>Whenever you read tensor code, focus on these three things first:</p>
-<ol type="1">
-<li>What is the current shape?</li>
-<li>What will the next shape be?</li>
-<li>Why is the shape changing?</li>
-</ol>
-<p>If you always focus on individual values, model code will feel much harder than it needs to.</p>
-</section>
-<section id="why-shape-usually-matters-more-than-values" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="why-shape-usually-matters-more-than-values"><span class="header-section-number">3.3</span> Why Shape Usually Matters More Than Values</h2>
-<p>At the beginning it is easy to stare at values like <code>1.0</code>, <code>2.0</code>, and <code>3.0</code>.</p>
-<p>But in deep learning code, shapes are usually more important:</p>
-<ul>
-<li><code>[12]</code></li>
-<li><code>[3, 4]</code></li>
-<li><code>[1, 3, 4]</code></li>
-<li><code>[1, 12]</code></li>
-</ul>
-<p>Many bugs are not numerical mistakes. They are shape mistakes.</p>
-</section>
-<section id="now-read-code02_autograd_basics.py-line-by-line" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="now-read-code02_autograd_basics.py-line-by-line"><span class="header-section-number">3.4</span> Now Read <code>code/02_autograd_basics.py</code> Line by Line</h2>
-<p>This file introduces trainable parameters for the first time:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>weight <span class="op">=</span> torch.tensor(<span class="fl">2.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>bias <span class="op">=</span> torch.tensor(<span class="fl">1.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The key point here is not the syntax. It is the role of each tensor:</p>
-<ul>
-<li>the input <code>x</code> does not need to be learned</li>
-<li>the parameters <code>weight</code> and <code>bias</code> do need to be learned</li>
-</ul>
-<p>That is why only the parameters use <code>requires_grad=True</code>.</p>
-<section id="step-1-compute-the-prediction" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="step-1-compute-the-prediction"><span class="header-section-number">3.4.1</span> Step 1: Compute the prediction</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> weight <span class="op">*</span> x <span class="op">+</span> bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is the simplest possible linear model.</p>
-<p>It says:</p>
-<ul>
-<li>take each input <code>x</code></li>
-<li>multiply by the weight <code>weight</code></li>
-<li>add the bias <code>bias</code></li>
-<li>get the prediction <code>y_pred</code></li>
-</ul>
-</section>
-<section id="step-2-compute-the-loss" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="step-2-compute-the-loss"><span class="header-section-number">3.4.2</span> Step 2: Compute the loss</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> ((y_pred <span class="op">-</span> y_true) <span class="op">**</span> <span class="dv">2</span>).mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This answers a very practical question:</p>
-<p>how far are the model’s predictions from the true answers right now?</p>
-<p>Here we use mean squared error.</p>
-</section>
-<section id="step-3-run-backpropagation" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="step-3-run-backpropagation"><span class="header-section-number">3.4.3</span> Step 3: Run backpropagation</h3>
-<p>In this code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>loss.backward()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>you can think of the process like this:</p>
-<ol type="1">
-<li>use the current parameters to compute predictions</li>
-<li>compare those predictions with the true targets</li>
-<li>ask PyTorch to compute how the parameters should move</li>
-</ol>
-<p>That third step is backpropagation.</p>
-<p>Afterward, <code>weight.grad</code> and <code>bias.grad</code> contain values.</p>
-<p>Those gradients are not the new parameters. They are signals that tell us how the parameters should be updated.</p>
-</section>
-</section>
-<section id="put-the-two-files-together" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="put-the-two-files-together"><span class="header-section-number">3.5</span> Put the Two Files Together</h2>
-<p><code>01_tensor_basics.py</code> teaches you how data is shaped.</p>
-<p><code>02_autograd_basics.py</code> teaches you how parameters receive gradients through the loss.</p>
-<p>Together they form the foundation of later training code:</p>
-<ul>
-<li>data must be organized in the right shapes</li>
-<li>parameters must be part of the computation so gradients can flow to them</li>
-</ul>
-</section>
-<section id="the-big-ideas-behind-the-code" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="the-big-ideas-behind-the-code"><span class="header-section-number">3.6</span> The Big Ideas Behind the Code</h2>
-<p>After these two files, you should be able to summarize the core ideas:</p>
-<ol type="1">
-<li>Tensors are PyTorch’s basic data structure.</li>
-<li>In deep learning code, shape is often the first thing to check.</li>
-<li>Parameters differ from normal inputs because parameters need to be learned.</li>
-<li><code>backward()</code> computes gradients. It does not update parameters.</li>
+<li>load the dataset</li>
+<li>split it into train and validation sets</li>
+<li>standardize the features</li>
+<li>wrap the data in a PyTorch <code>Dataset</code></li>
+<li>train a binary classifier</li>
+<li>evaluate it and save the best checkpoint</li>
 </ol>
 </section>
-<section id="what-you-should-change-yourself" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="what-you-should-change-yourself"><span class="header-section-number">3.7</span> What You Should Change Yourself</h2>
-<p>Try editing a few things and rerun the code:</p>
+<section id="what-the-code-is-teaching-beyond-the-model" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="what-the-code-is-teaching-beyond-the-model"><span class="header-section-number">12.3</span> What the Code Is Teaching Beyond the Model</h2>
+<p>The model itself is small. That is deliberate.</p>
+<p>The real lessons in this file are:</p>
+<ul>
+<li>how to prepare tabular features</li>
+<li>why standardization matters</li>
+<li>how binary labels differ from multiclass labels</li>
+<li>why <code>BCEWithLogitsLoss</code> is the right loss here</li>
+<li>how to save the best model instead of only the last one</li>
+</ul>
+</section>
+<section id="the-shape-of-the-problem" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="the-shape-of-the-problem"><span class="header-section-number">12.4</span> The Shape of the Problem</h2>
+<p>For a tabular binary classification task, the basic structure is usually:</p>
+<ul>
+<li>input: <code>[batch_size, num_features]</code></li>
+<li>output: <code>[batch_size]</code> or <code>[batch_size, 1]</code></li>
+<li>target: binary labels such as <code>0</code> and <code>1</code></li>
+</ul>
+<p>That is already different from the image classification tasks earlier in the book.</p>
+<p>And that difference matters, because it changes:</p>
+<ul>
+<li>the last layer of the model</li>
+<li>the loss function</li>
+<li>the way predictions are turned into class labels</li>
+</ul>
+</section>
+<section id="why-bcewithlogitsloss-fits-this-task" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="why-bcewithlogitsloss-fits-this-task"><span class="header-section-number">12.5</span> Why <code>BCEWithLogitsLoss</code> Fits This Task</h2>
+<p>In this project, the model outputs one raw score per sample.</p>
+<p>That score is not yet a probability. It is a logit.</p>
+<p><code>BCEWithLogitsLoss</code> is designed for exactly that setup:</p>
+<ul>
+<li>one output value per sample</li>
+<li>binary labels</li>
+<li>no separate sigmoid in the model definition</li>
+</ul>
+<p>When you want predicted labels, you can apply <code>sigmoid</code> during evaluation and threshold at <code>0.5</code>.</p>
+</section>
+<section id="the-workflow-you-should-learn-here" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="the-workflow-you-should-learn-here"><span class="header-section-number">12.6</span> The Workflow You Should Learn Here</h2>
+<p>This chapter is not only about this dataset.</p>
+<p>It is really teaching a repeatable workflow for tabular classification:</p>
 <ol type="1">
-<li>In <code>01_tensor_basics.py</code>, change <code>reshape(3, 4)</code> to another valid shape.</li>
-<li>In <code>02_autograd_basics.py</code>, change the initial values of <code>weight</code> and <code>bias</code>.</li>
-<li>Observe how <code>loss</code> and <code>.grad</code> change.</li>
+<li>split the data correctly</li>
+<li>standardize the features using only the training split</li>
+<li>build a small baseline model first</li>
+<li>validate every epoch</li>
+<li>save the checkpoint with the best validation result</li>
 </ol>
-<p>That is how PyTorch starts to feel natural: not by memorizing APIs, but by watching shapes and gradients behave.</p>
+<p>If you can repeat that workflow on your own, you are no longer just experimenting. You are building projects.</p>
+</section>
+<section id="what-you-should-be-able-to-do-after-this-chapter" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="what-you-should-be-able-to-do-after-this-chapter"><span class="header-section-number">12.7</span> What You Should Be Able to Do After This Chapter</h2>
+<p>After working through this file, you should be able to:</p>
+<ol type="1">
+<li>take a tabular binary classification dataset and feed it into PyTorch</li>
+<li>choose a reasonable baseline network</li>
+<li>use the right loss function for binary classification</li>
+<li>monitor validation accuracy</li>
+<li>save the best checkpoint for later use</li>
+</ol>
+<p>That is already much closer to real project work than a toy demo.</p>
 
 
 </section>
@@ -875,13 +762,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./01-roadmap.html" class="pagination-link" aria-label="A Map of the Code">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A Map of the Code</span></span>
+      <a href="./10-build-your-own-task.html" class="pagination-link" aria-label="Translating Your Own Problem into PyTorch">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Translating Your Own Problem into PyTorch</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-training-loop.html" class="pagination-link" aria-label="Learning the Training Loop Through Linear Regression">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Learning the Training Loop Through Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./12-image-project-workflow.html" class="pagination-link" aria-label="A Complete Image Classification Workflow">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">A Complete Image Classification Workflow</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
